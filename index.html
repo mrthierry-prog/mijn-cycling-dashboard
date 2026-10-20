@@ -19,7 +19,7 @@ header p{margin:5px 0;color:var(--muted)}
 nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#191126}
 button,input,select{font:inherit}
 button{background:var(--purple);border:0;color:white;padding:11px 15px;border-radius:10px;cursor:pointer}
-button:hover{filter:brightness(1.14)}
+button:hover{filter:brightness(1.12)}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--light);outline-offset:2px}
 button.secondary{background:#48345f}
 button.danger{background:#65364e}
@@ -31,7 +31,7 @@ main{max-width:1150px;margin:auto;padding:20px}
 .card{background:var(--panel);padding:20px;border:1px solid var(--border);border-radius:16px;margin-bottom:18px}
 .card h2,.card h3{margin-top:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.small{font-size:13px;color:var(--muted)}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
 .stat{font-size:30px;font-weight:bold;color:var(--light)}
 label{display:block;color:var(--muted);font-size:14px;margin-top:8px}
 input,select{width:100%;background:var(--panel2);color:white;border:1px solid #59456e;border-radius:9px;padding:12px;margin:7px 0 13px}
@@ -57,8 +57,7 @@ input,select{width:100%;background:var(--panel2);color:white;border:1px solid #5
 .bot{background:#342841}
 .hidden{display:none!important}
 .hero{background:linear-gradient(120deg,#452269,#211832);border-color:#704594}
-.hero h2{margin-bottom:8px}
-.category-card{display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:transform .15s,border-color .15s}
+.category-card{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--panel);color:var(--text);cursor:pointer;transition:transform .15s}
 .category-card:hover{transform:translateY(-3px);border-color:var(--light)}
 .category-card h3{margin:0}
 .category-icon{font-size:30px}
@@ -67,16 +66,9 @@ input,select{width:100%;background:var(--panel2);color:white;border:1px solid #5
 .workout-card h3{margin:3px 0}
 .workout-card button{margin-top:auto}
 .tag{display:inline-block;width:max-content;padding:6px 9px;background:#51356c;border-radius:7px;font-size:12px}
-.workout-chart{display:flex;align-items:flex-end;gap:2px;height:75px;width:100%;overflow:hidden}
-.workout-chart div{min-width:1px;border-radius:3px 3px 0 0}
-.details-chart{height:140px;background:#171222;border-radius:10px;padding:10px}
-.interval{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
-.interval:last-child{border:0}
-.interval strong{display:block}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.filters button{background:#342447;font-size:13px}
-.filters button.selected{background:var(--purple)}
+.workout-bar{height:8px;border-radius:20px;background:linear-gradient(90deg,#4b8dce,#31d69b,#a855f7,#fb7185)}
 .notice{padding:12px;background:#332444;border-left:3px solid var(--light);border-radius:8px;line-height:1.6;font-size:13px}
+a{color:#d6a7ff}
 footer{text-align:center;color:var(--muted);padding:30px}
 @media(max-width:600px){
  main{padding:12px}
@@ -128,7 +120,7 @@ footer{text-align:center;color:var(--muted);padding:30px}
   <h2>Nieuwe training</h2>
   <form id="trainingForm">
    <label>Naam training</label>
-   <input id="trainName" maxlength="100" required placeholder="Bijv. Zwift intervaltraining">
+   <input id="trainName" maxlength="100" required placeholder="Bijv. Zwift Endurance #1">
    <label>Datum</label>
    <input id="trainDate" type="date" required>
    <label>Soort training</label>
@@ -179,11 +171,11 @@ footer{text-align:center;color:var(--muted);padding:30px}
 
 <section class="page" id="zwift">
  <h2>⚡ Zwift Training Center</h2>
- <p class="small">Ontdek je training. Kies je categorie. Bouw je conditie op.</p>
+ <p class="small">Echte workoutnamen uit de Zwift-catalogus.</p>
 
  <div class="card hero">
   <h2>⚡ Workout Library</h2>
-  <p>60 trainingen verdeeld over zes categorieën.</p>
+  <p><strong id="totalWorkouts">221</strong> Zwift-workouts in zeven categorieën.</p>
   <div class="row">
    <div>
     <label>Jouw FTP (watt)</label>
@@ -191,12 +183,12 @@ footer{text-align:center;color:var(--muted);padding:30px}
    </div>
    <div style="align-self:end"><button onclick="saveFTP()">FTP opslaan</button></div>
   </div>
-  <p class="small">200 watt is een voorbeeldwaarde, geen schatting van jouw FTP.</p>
+  <p class="small">Je FTP wordt bewaard voor toekomstige coachadviezen. 200 W is uitsluitend de standaard voorbeeldwaarde.</p>
  </div>
 
  <div id="categoryView">
-  <h2>🎯 Kies je trainingscategorie</h2>
-  <div id="categoryGrid" class="grid"></div>
+  <h2>🎯 Kies een trainingscategorie</h2>
+  <div class="grid" id="categoryGrid"></div>
  </div>
 
  <div id="libraryView" class="hidden">
@@ -206,28 +198,13 @@ footer{text-align:center;color:var(--muted);padding:30px}
   <div class="card">
    <label>Zoek een workout</label>
    <input id="workoutSearch" placeholder="Zoek op naam...">
-   <div class="row">
-    <div>
-     <label>Duur</label>
-     <select id="durationFilter">
-      <option value="all">Alle lengtes</option>
-      <option value="short">Tot 45 minuten</option>
-      <option value="medium">46–75 minuten</option>
-      <option value="long">Langer dan 75 minuten</option>
-     </select>
-    </div>
-    <div>
-     <label>Moeilijkheid</label>
-     <select id="difficultyFilter">
-      <option value="all">Alle niveaus</option>
-      <option value="1">1 ster</option>
-      <option value="2">2 sterren</option>
-      <option value="3">3 sterren</option>
-      <option value="4">4 sterren</option>
-      <option value="5">5 sterren</option>
-     </select>
-    </div>
-   </div>
+   <label>Trainingsduur</label>
+   <select id="durationFilter">
+    <option value="all">Alle lengtes</option>
+    <option value="short">Tot 45 minuten</option>
+    <option value="medium">46–75 minuten</option>
+    <option value="long">Langer dan 75 minuten</option>
+   </select>
    <p class="small" id="workoutCount"></p>
   </div>
   <div class="grid" id="workoutGrid"></div>
@@ -240,42 +217,39 @@ footer{text-align:center;color:var(--muted);padding:30px}
    <h2 id="detailName" style="margin-top:14px"></h2>
    <p class="small" id="detailMeta"></p>
    <p id="detailDescription"></p>
-   <h3>📊 Vermogensprofiel</h3>
-   <div class="workout-chart details-chart" id="detailChart"></div>
-   <p class="small">De hoogte van elk blok geeft het percentage van je FTP aan.</p>
-   <h3>⚡ Trainingsblokken</h3>
-   <div id="detailSegments"></div>
-   <h3>📅 Workout inplannen</h3>
+   <div class="notice">
+    Bekijk via de link hieronder de oorspronkelijke workout,
+    inclusief de echte trainingsblokken en FTP-percentages.
+   </div>
+   <p><a id="originalLink" target="_blank" rel="noopener noreferrer">
+    Bekijk de originele Zwift-catalogus ↗
+   </a></p>
+   <h3>📅 Inplannen</h3>
    <label>Datum</label>
    <input id="workoutDate" type="date">
    <label>Geplande afstand (km)</label>
    <input id="workoutDistance" type="number" min="0" max="1000" step="0.1" value="0">
-   <p class="small">Je kunt je daadwerkelijke afstand later bijhouden als afgeronde training.</p>
+   <p class="small">De afstand is optioneel; de werkelijke afstand hangt onder andere af van de Zwift-route.</p>
    <button onclick="planWorkout()">+ Toevoegen aan mijn kalender</button>
   </div>
  </div>
-
  <div class="card">
-  <div class="notice">
-   De workoutbibliotheek bevat zelf samengestelde trainingsvoorbeelden,
-   geen officiële Zwift-workouts. Vermogenspercentages zijn richtlijnen.
-   De website start Zwift niet automatisch en bedient je fietstrainer niet.
-  </div>
+  <p class="small">Bron: What's on Zwift. De workouts zijn gecatalogiseerd als beschikbaar in Zwift. Beschikbaarheid en plaats in de app kunnen door updates veranderen. Deze website koppelt niet rechtstreeks met Zwift.</p>
  </div>
 </section>
 
 <section class="page" id="coach">
  <h2>🤖 Cycling Coach</h2>
  <div class="card">
-  <p class="small">Een gratis chatcoach op basis van vaste trainingsregels.</p>
+  <p class="small">Je coach kent de echte workoutnamen uit jouw bibliotheek.</p>
   <div class="chat" id="chat"></div>
   <form id="chatForm">
-   <input id="chatInput" required placeholder="Vraag bijvoorbeeld: maak een weekschema">
+   <input id="chatInput" required placeholder="Bijv. adviseer een VO2 Max training van 45 minuten">
    <button type="submit">Versturen ➤</button>
   </form>
   <div class="row">
    <button class="secondary" onclick="askCoach('Maak een weekschema')">📅 Weekschema</button>
-   <button class="secondary" onclick="askCoach('Welke Zwift training raad je aan?')">⚡ Zwift</button>
+   <button class="secondary" onclick="askCoach('Adviseer een Zwift training')">⚡ Zwift</button>
    <button class="secondary" onclick="askCoach('Hoe gaat mijn voortgang?')">📈 Voortgang</button>
   </div>
  </div>
@@ -332,7 +306,7 @@ function save(){
   localStorage.setItem(KEY,JSON.stringify(data));
   return true;
  }catch(e){
-  alert("Opslaan is mislukt. Controleer de browseropslag.");
+  alert("Opslaan mislukt. Controleer de browseropslag.");
   return false;
  }
 }
@@ -491,209 +465,302 @@ function renderGoals(){
  completedKm().toFixed(1)+" van "+data.goal+" km voltooid ("+percent()+"%).";
 }
 
-// ZWIFT WORKOUTS
-// Elk blok heeft: [naam, minuten, percentage FTP].
-// Er zijn zes categorieën met elk tien workouts.
+// ==========================================
+// ECHTE ZWIFT-WORKOUTBIBLIOTHEEK
+// Naam | duur in minuten
+//
+// De namen en duren zijn overgenomen uit
+// de workoutcollecties van What's on Zwift.
+// Dit zijn GEEN zelfgemaakte trainingsschema's.
+// ==========================================
 
 const categories=[
- {id:"endurance",name:"Endurance",icon:"💚",
-  desc:"Rustige en lange duurtrainingen om je basisconditie op te bouwen."},
- {id:"sweet",name:"Sweet Spot",icon:"💜",
-  desc:"Stevige duurblokken rond 88–94% van je FTP."},
- {id:"threshold",name:"Threshold",icon:"🔥",
-  desc:"Intensieve blokken rond je functionele drempelvermogen."},
- {id:"vo2",name:"VO2 Max",icon:"❤️",
-  desc:"Korte zware intervallen om je maximale aerobe vermogen te trainen."},
- {id:"sprint",name:"Sprinting",icon:"⚡",
-  desc:"Korte explosieve inspanningen en volledige herstelpauzes."},
- {id:"climb",name:"Climbing",icon:"⛰️",
-  desc:"Stevige, langere blokken om klimmen te simuleren."}
-];
-
-const workouts=[];
-function addWorkout(category,name,difficulty,blocks,description){
- workouts.push({
-  id:category+"-"+(workouts.length+1),
-  category,name,difficulty,blocks,description
- });
-}
-function B(name,minutes,pct){return [name,minutes,pct]}
-function warm(){return B("Warming-up",10,50)}
-function cool(){return B("Cooling-down",8,45)}
-function repeat(count,workMin,workPct,restMin,restPct,name){
- const a=[];
- for(let i=1;i<=count;i++){
-  a.push(B(name+" "+i,workMin,workPct));
-  if(i<count)a.push(B("Herstel",restMin,restPct));
+ {
+  id:"endurance",name:"Endurance",icon:"💚",
+  desc:"Uithoudingsvermogen en je aerobe basis.",
+  url:"https://whatsonzwift.com/workouts/endurance",
+  items:`Aerobic Builds|90
+Aerobic Sustainability|50
+Back to Basics|69
+Cadence Bursts|63
+Cafe Ride|34
+Endurance #1|60
+Endurance #2|63
+Endurance #3|66
+Endurance Building Blocks|67
+Fast pedaling|60
+Get It Done|60
+High-Cadence Builds|47
+Pacing #1|58
+Pacing #2|68
+Rolling Hills #1|56
+Saw Legs|77
+Taper Steady|50
+The Long Ride|85
+Twelve Spikes|60
+Workout 3|60
+Workout 16|82
+Z2 Cadence Changes|50`
+ },
+ {
+  id:"sweet",name:"Sweet Spot",icon:"💜",
+  desc:"Stevige, langere inspanningen net onder je FTP.",
+  url:"https://whatsonzwift.com/workouts/sweet-spot",
+  items:`15min varied tempo #2|60
+Big Gear SST - 3x5|35
+Dirty Teeth Drills|60
+Explosive SST #2|98
+Free Ride Sandwich|53
+HIIT 80% FTP #2|45
+Pounding Sand|58
+Recipe for Grit|54
+Rolling Roads|71
+SST Bursts 8|35
+Strength Endurance + REV for :15 seconds|43
+Sub Threshold #4|85
+Sweet Spot|55
+Sweet Spot 12|63
+Sweet Spot Builds|60
+Sweet Spot Pyramid - 50min|72
+Sweet Spot Ramps - 30min|55
+Tempo|82
+Tempo #1|58
+Tempo 15min / Target RPM #3|69
+Tempo Climbing|61
+Tempo into VO2 Max #1|60
+Tempo with accelerations #1|52
+Texaco Hill Tempo|56
+XX SST 2 x 20min|76`
+ },
+ {
+  id:"threshold",name:"Threshold",icon:"🔥",
+  desc:"Drempelvermogen, FTP en zware duurblokken.",
+  url:"https://whatsonzwift.com/workouts/threshold",
+  items:`2x(4x2min) Threshold Fun|60
+2x(5x2min) Threshold Fun|60
+8/6/4min Threshold|60
+At/Over/Under|48
+Cameron Wurf: All-Rounder|60
+Cruise Intervals #1|55
+Cruise Intervals #4|59
+Cucumber|90
+Devedeset|60
+Exemplar|60
+FTP Boosters|28
+FTP w/ Bursts|53
+Fun is Staying Cool|41
+Halvfems|62
+Hard Starts #1|59
+Hill Pyramid At Threshold|78
+HIT 80% FTP #1|52
+Intensive Aerobic x 4|87
+Intermittent|62
+Kirizuma|90
+Long Tempo|50
+Low-Cadence Intervals|50
+Malevolent|60
+Norseman workout: Eidfjord|70
+Novanta|60
+Over - Unders|33
+Over-Unders & Over-ATS|66
+Race Ready|32
+Season Base #1|59
+Supra-Threshold #1|63
+SweetSpot w/ Bursts|70
+Tanja Erath - FTP Booster|45
+The Geoghegan Hart|42
+Threshold #1|58
+Threshold #2|66
+Threshold #6|64
+Threshold Development|66
+Time Trial Ramp|44
+Tine|60
+TT#1 The Polish|82
+TT#2 Core Workout|100
+TT#3 Dynamic TT Course Work|62
+Varying Threshold|71
+What Goes Up, Must Come Down|60`
+ },
+ {
+  id:"vo2",name:"VO2 Max",icon:"❤️",
+  desc:"Krachtige intervallen om je maximale aerobe vermogen te ontwikkelen.",
+  url:"https://whatsonzwift.com/workouts/vo2-max",
+  items:`6 Bombs to Drop|58
+6x2 VO2 Max|62
+#8|60
+8.5 Minutes Of Pain|27
+130% of FTP Hangers|42
+15.9|60
+3/3/2min VO2max|49
+30/30 Anaerobic #1|52
+40/20's #1|51
+AC Intervals #1|57
+AC Maintenance #1|58
+Anaerobic|60
+Anaerobic Blasts|26
+Anaerobic Capacity 1min & 2min|54
+Anaerobic Endurance 4x60sec|59
+Breakfast Returns|60
+Descending Anaerobic|54
+Extensive Anaerobic x 6|55
+High Intensity/5min|53
+INEOS Grenadiers: Anaerobic Capacity|52
+Lionel Sanders' Green Day Workout|43
+LOX|60
+Max Aerobic Finale|54
+Max Aerobic x 3|97
+Microbursts|60
+Power Intervals #1|56
+The Ganna|50
+Turn Up The AC (2x4x2min)|51
+Up And Over|36
+VO2 & AC|69
+VO2 Blast|45
+Vo2 Max 3min & 2min|74
+VO2 Max 3x3|38
+VO2 Max - 3x4 Tabata Style|40
+VO2 Max - 4x3 Ramps|41
+VO2 Max - 4x4 (40/20)|48
+VO2 Surges|24`
+ },
+ {
+  id:"sprint",name:"Sprinting",icon:"⚡",
+  desc:"Explosieve versnellingen en sprintvermogen.",
+  url:"https://whatsonzwift.com/workouts/sprinting",
+  items:`Accelerations|59
+Anna Meares - Team Sprint|32
+EF Pro Cycling's Yellow Day Workout|55
+Elia Viviani: Sprinter|45
+EPOC|52
+Final Sharpen|30
+Fun is Going Full Gas|45
+Fun Sprints and Fast Legs|25
+Gearing|67
+Higher And Faster|62
+Ivan Garcia Cortina: Sprinter|43
+Lauren Kitchen - HIT Intervals|44
+Leg Speed #2|58
+LOAD-UPs!|60
+Make A Break For It|50
+Michael Matthews: Sprinter|42
+Microbursts 10-20-30|47
+Microbursts 30's|38
+Nelson Vails - Sprint|39
+Power|60
+Power Surges #1|59
+Speed Sprints|59
+Sprint!|60
+Sprint B4 Sprint|60
+Sprints|59
+Surge to the Max|47
+Taper Time|50
+Tempo into Sprints|61
+Tempo w/ Bursts|70
+Teniel Campbell: All-rounder|42
+The Kwiatkowski|41
+The Swift|36`
+ },
+ {
+  id:"climb",name:"Climbing",icon:"⛰️",
+  desc:"Klimkracht, lagere cadans en langere inspanningen.",
+  url:"https://whatsonzwift.com/workouts/climbing",
+  items:`65rpm Strength Ramps|61
+Anaerobic Capacity Hills #1|60
+Building Climbs|90
+Carlos Verona: Climber|45
+Climb Approach|49
+Climbing Adaption|53
+Cruise Control|41
+EF Pro Cycling's Green Day Workout|50
+Ella Harris - Climbing Power|52
+Gentle Squeeze|53
+Goin' for Gravel|58
+Hard Starts|42
+High Torque Hills|60
+Hill Attacks|45
+Hill Sprints|60
+Jess Allen: Domestique|39
+Lawson Craddock: All-rounder|42
+Long Climbs|57
+Long Tempo Climb #1|61
+Mariana Pajon - Force Development|33
+Neuromuscular Power #1|63
+Nino Schurter - Punchy Climbs|41
+Norseman workout: Dyranut|60
+Norseman workout: Geilo|63
+Norseman workout: Hardangervidda|60
+Norseman workout: Imingfjell|75
+Norseman workout: Vasstulan|60
+Progressive 6min #2|58
+Progressive 11min Climb|59
+Pulverize the Prairie|57
+Pure Strength #1|62
+Random lengths|70
+Rolling Hills #2|64
+Seated & Standing|74
+Steeper & Steeper|60
+Step-Down Intervals|50
+Stone Roller|50
+Strength Endurance #1|59
+Strength Endurance + Sweet Spot|45
+Strength into FTP #1|72
+Strength + Power|45
+Strength Surges|53
+Sweetspot w/ steeps|60
+Tempo Climbing #1|61
+The Bernal|40
+The Carapaz|52
+The Pidcock|42
+The Thomas|47
+Tractor Pulls|60
+Vo2max|70
+Watopia Hilly Forward|57
+Workout 2|64`
+ },
+ {
+  id:"recovery",name:"Recovery",icon:"🩵",
+  desc:"Rustig fietsen en actief herstel.",
+  url:"https://whatsonzwift.com/workouts/recovery",
+  items:`Active Recovery|115
+Cadence Pyramid|45
+Easy Hour|60
+EF Pro Cycling's Red Day Workout|45
+Lionel Sanders' Yellow Day Workout|55
+Mend|33
+Pedaling Drills|30
+Recovery Spin|48
+Zone 2 #1|60`
  }
- return a;
-}
-function build(blocks){return [warm(),...blocks,cool()]}
-function duration(w){return w.blocks.reduce((s,b)=>s+b[1],0)}
-function watts(p){return Math.round(ftp*p/100)}
-
-// ENDURANCE - 10 trainingen
-const enduranceConfigs=[
- ["Recovery Cruise",1,20,50],
- ["Foundation 40",1,22,60],
- ["Base Builder",1,35,65],
- ["Aerobic 50",2,32,70],
- ["Endurance 60",2,42,65],
- ["Endurance 75",2,57,68],
- ["Steady State",2,50,72],
- ["Long Aerobic 90",2,72,65],
- ["Progressive Endurance",3,65,73],
- ["Century Base Builder",3,102,68]
 ];
-enduranceConfigs.forEach(([name,d,min,pct])=>{
- addWorkout("endurance",name,d,build([
-  B("Doorlopende duurinspanning",min,pct)
- ]),"Een gelijkmatige duurtraining op "+pct+"% FTP.");
+
+// Maak één centrale database voor
+// de bibliotheek EN de Cycling Coach.
+const workouts=[];
+categories.forEach(c=>{
+ c.items.trim().split("\n").forEach((line,i)=>{
+  const separator=line.lastIndexOf("|");
+  if(separator===-1)return;
+  const name=line.slice(0,separator).trim();
+  const minutes=Number(line.slice(separator+1).trim());
+  if(!name||!Number.isFinite(minutes))return;
+  workouts.push({
+   id:c.id+"-"+i,
+   category:c.id,
+   name,minutes,
+   url:c.url
+  });
+ });
 });
 
-// SWEET SPOT - 10 trainingen
-const sweetConfigs=[
- ["Sweet Spot Intro",2,2,6,88,4],
- ["Sweet Spot 3 × 8",3,3,8,88,4],
- ["Sweet Spot 2 × 12",3,2,12,90,5],
- ["Sweet Spot 3 × 10",3,3,10,90,5],
- ["Sweet Spot 2 × 15",3,2,15,90,6],
- ["Sweet Spot 3 × 12",4,3,12,92,5],
- ["Sweet Spot 2 × 20",4,2,20,90,8],
- ["Sweet Spot 4 × 10",4,4,10,92,5],
- ["Sweet Spot 3 × 15",4,3,15,93,6],
- ["Sweet Spot Challenge",5,3,20,94,7]
-];
-sweetConfigs.forEach(([name,d,count,min,pct,rest])=>{
- addWorkout("sweet",name,d,build(
-  repeat(count,min,pct,rest,50,"Sweet Spot")
- ),"Train je duurvermogen met stevige blokken net onder je FTP.");
-});
-
-// THRESHOLD - 10 trainingen
-const thresholdConfigs=[
- ["Threshold Introduction",3,3,5,95,4],
- ["FTP 3 × 6",3,3,6,98,4],
- ["Threshold 2 × 8",3,2,8,100,5],
- ["FTP 3 × 8",4,3,8,100,5],
- ["Threshold 2 × 10",4,2,10,100,6],
- ["Threshold 3 × 10",4,3,10,98,5],
- ["FTP 2 × 12",4,2,12,100,6],
- ["Threshold 3 × 12",5,3,12,100,6],
- ["FTP 2 × 15",5,2,15,100,8],
- ["Threshold Challenge",5,2,20,98,10]
-];
-thresholdConfigs.forEach(([name,d,count,min,pct,rest])=>{
- addWorkout("threshold",name,d,build(
-  repeat(count,min,pct,rest,50,"Threshold")
- ),"Blokken rond je FTP om langer een hoog vermogen vol te houden.");
-});
-
-// VO2 MAX - 10 trainingen
-const vo2Configs=[
- ["VO2 Starter",3,3,2,110,3],
- ["VO2 4 × 2",3,4,2,112,3],
- ["VO2 5 × 2",4,5,2,115,3],
- ["VO2 4 × 3",4,4,3,110,3],
- ["VO2 5 × 3",4,5,3,115,3],
- ["VO2 6 × 3",5,6,3,112,3],
- ["VO2 4 × 4",5,4,4,110,4],
- ["VO2 5 × 4",5,5,4,110,4],
- ["VO2 6 × 2",5,6,2,120,3],
- ["VO2 Max Challenge",5,5,5,108,5]
-];
-vo2Configs.forEach(([name,d,count,min,pct,rest])=>{
- addWorkout("vo2",name,d,build(
-  repeat(count,min,pct,rest,45,"VO2-interval")
- ),"Een intensieve intervaltraining met ruime herstelpauzes.");
-});
-
-// SPRINTING - 10 trainingen
-// De sprintblokken zijn tijdgebaseerde voorbeelden.
-// Percentage FTP is bij echte maximale sprints beperkt bruikbaar.
-const sprintConfigs=[
- ["Sprint Starter",2,4,0.17,130,3],
- ["Sprint Power",3,6,0.17,150,3],
- ["Explosive 10s",3,8,0.17,160,3],
- ["Neuromuscular Power",3,6,0.25,150,4],
- ["Acceleration",3,8,0.25,140,3],
- ["Sprint Repeat",4,10,0.17,160,3],
- ["Power Burst",4,8,0.33,150,4],
- ["Sprint Pyramid",4,10,0.25,150,3],
- ["Race Sprint Prep",5,12,0.17,170,4],
- ["Sprint Challenge",5,12,0.25,160,4]
-];
-sprintConfigs.forEach(([name,d,count,min,pct,rest])=>{
- addWorkout("sprint",name,d,[
-  B("Warming-up",15,50),
-  ...repeat(count,min,pct,rest,45,"Sprint"),
-  B("Cooling-down",10,45)
- ],"Korte sprints met rustige herstelmomenten. De vermogenspercentages zijn indicatief; voer maximale sprints uit op gevoel en met voldoende herstel.");
-});
-
-// CLIMBING - 10 trainingen
-const climbConfigs=[
- ["Hill Starter",2,3,5,80,4],
- ["Rolling Hills",2,4,5,85,3],
- ["Climbing Strength",3,3,8,85,4],
- ["Hill Tempo",3,3,10,88,5],
- ["Long Hill Repeats",3,3,12,90,6],
- ["Climbing Threshold",4,4,8,95,5],
- ["Mountain Builder",4,3,15,88,6],
- ["Alpine Strength",4,2,20,90,8],
- ["Summit Challenge",5,3,15,95,7],
- ["Mountain Monster",5,3,20,92,8]
-];
-climbConfigs.forEach(([name,d,count,min,pct,rest])=>{
- addWorkout("climb",name,d,build(
-  repeat(count,min,pct,rest,50,"Klimblok")
- ),"Simuleer een klim met langere blokken op stevig vermogen.");
-});
-
-// WORKOUT-BIBLIOTHEEK
 let activeCategory=null;
 let selectedWorkout=null;
 
-function colorFor(p){
- if(p<60)return "#73a9ff";
- if(p<75)return "#31d69b";
- if(p<90)return "#e9bb48";
- if(p<=105)return "#bf78ff";
- return "#ff7091";
-}
-function chart(w){
- const total=duration(w);
- return w.blocks.map(b=>{
-  const width=b[1]/total*100;
-  const height=Math.min(100,b[2]/180*100);
-  return `<div title="${esc(b[0])} - ${b[1].toFixed(2)} min - ${b[2]}% FTP"
-  style="flex:0 0 calc(${width}% - 2px);
-  height:${height}%;background:${colorFor(b[2])}"></div>`;
- }).join("");
-}
-function displayMinutes(n){
- const sec=Math.round(n*60);
- if(sec%60===0)return sec/60+" min";
- return Math.floor(sec/60)+" min "+sec%60+" sec";
-}
-function saveFTP(){
- const n=Number($("ftpInput").value);
- if(!Number.isFinite(n)||n<50||n>600){
-  alert("Vul een FTP tussen 50 en 600 watt in.");return;
- }
- ftp=n;
- try{
-  localStorage.setItem(FTP_KEY,String(ftp));
-  if(selectedWorkout)openWorkout(selectedWorkout.id);
-  alert("FTP opgeslagen!");
- }catch(e){alert("Je FTP kon niet worden opgeslagen.")}
-}
 function renderCategories(){
  $("ftpInput").value=ftp;
+ $("totalWorkouts").textContent=workouts.length;
  $("categoryGrid").innerHTML=categories.map(c=>{
   const count=workouts.filter(w=>w.category===c.id).length;
-  return `<button class="card category-card" data-category="${c.id}"
-   style="text-align:left;color:var(--text);background:var(--panel)">
+  return `<button class="card category-card" data-category="${c.id}">
    <div class="category-icon">${c.icon}</div>
    <h3>${esc(c.name)}</h3>
    <p class="small">${esc(c.desc)}</p>
@@ -716,7 +783,6 @@ function openCategory(id){
  $("libraryDescription").textContent=activeCategory.desc;
  $("workoutSearch").value="";
  $("durationFilter").value="all";
- $("difficultyFilter").value="all";
  renderLibrary();
  window.scrollTo(0,0);
 }
@@ -732,15 +798,13 @@ function renderLibrary(){
  if(!activeCategory)return;
  const search=$("workoutSearch").value.toLowerCase();
  const df=$("durationFilter").value;
- const difficulty=$("difficultyFilter").value;
  const results=workouts.filter(w=>{
   if(w.category!==activeCategory.id)return false;
   if(!w.name.toLowerCase().includes(search))return false;
-  const min=duration(w);
-  if(df==="short"&&min>45)return false;
-  if(df==="medium"&&(min<=45||min>75))return false;
-  if(df==="long"&&min<=75)return false;
-  if(difficulty!=="all"&&w.difficulty!==Number(difficulty))return false;
+  const m=w.minutes;
+  if(df==="short"&&m>45)return false;
+  if(df==="medium"&&(m<=45||m>75))return false;
+  if(df==="long"&&m<=75)return false;
   return true;
  });
  $("workoutCount").textContent=results.length+" workouts gevonden";
@@ -748,17 +812,15 @@ function renderLibrary(){
   <div class="card workout-card">
    <span class="tag">${esc(activeCategory.name)}</span>
    <h3>${esc(w.name)}</h3>
-   <p class="small">⏱ ${Math.round(duration(w))} min •
-    ${"★".repeat(w.difficulty)}${"☆".repeat(5-w.difficulty)}</p>
-   <div class="workout-chart">${chart(w)}</div>
-   <p class="small">${esc(w.description)}</p>
-   <button data-workout="${w.id}">Bekijk workout →</button>
+   <p class="small">⏱ ${w.minutes} minuten</p>
+   <div class="workout-bar"></div>
+   <p class="small">${esc(activeCategory.desc)}</p>
+   <button data-workout="${esc(w.id)}">Bekijk workout →</button>
   </div>`).join("")
- :'<div class="card"><p>Geen workouts gevonden. Pas je filters aan.</p></div>';
+ :'<div class="card"><p>Geen workouts gevonden. Pas je zoekopdracht aan.</p></div>';
 }
 $("workoutSearch").oninput=renderLibrary;
 $("durationFilter").onchange=renderLibrary;
-$("difficultyFilter").onchange=renderLibrary;
 $("workoutGrid").onclick=e=>{
  const b=e.target.closest("[data-workout]");
  if(b)openWorkout(b.dataset.workout);
@@ -772,19 +834,10 @@ function openWorkout(id){
  $("workoutDetailView").classList.remove("hidden");
  $("detailCategory").textContent=c.name;
  $("detailName").textContent=w.name;
- $("detailMeta").textContent=
-  Math.round(duration(w))+" min • Niveau "+w.difficulty+"/5";
- $("detailDescription").textContent=w.description;
- $("detailChart").innerHTML=chart(w);
- $("detailSegments").innerHTML=w.blocks.map(b=>`
- <div class="interval">
-  <div><strong>${esc(b[0])}</strong>
-  <span class="small">${displayMinutes(b[1])}</span></div>
-  <div style="text-align:right">
-   <strong style="color:${colorFor(b[2])}">${watts(b[2])} W</strong>
-   <span class="small">${b[2]}% FTP</span>
-  </div>
- </div>`).join("");
+ $("detailMeta").textContent=w.minutes+" minuten • Zwift-workout";
+ $("detailDescription").textContent=c.desc;
+ $("originalLink").href=w.url;
+ $("originalLink").textContent="Bekijk "+w.name+" in de workoutcatalogus ↗";
  $("workoutDate").value=localDate();
  $("workoutDistance").value=0;
  window.scrollTo(0,0);
@@ -806,7 +859,7 @@ function planWorkout(){
   id:crypto.randomUUID(),
   name:"Zwift: "+selectedWorkout.name,
   date,type:"Zwift",
-  km,minutes:Math.round(duration(selectedWorkout)),
+  km,minutes:selectedWorkout.minutes,
   done:false,
   workoutId:selectedWorkout.id
  };
@@ -815,8 +868,23 @@ function planWorkout(){
  showPage("planning");
  alert("Workout toegevoegd aan je planning! ⚡");
 }
+function saveFTP(){
+ const n=Number($("ftpInput").value);
+ if(!Number.isFinite(n)||n<50||n>600){
+  alert("Vul een FTP tussen 50 en 600 watt in.");return;
+ }
+ ftp=n;
+ try{
+  localStorage.setItem(FTP_KEY,String(ftp));
+  alert("FTP opgeslagen!");
+ }catch(e){alert("Je FTP kon niet worden opgeslagen.")}
+}
 
+// ==========================================
 // CYCLING COACH
+// Gebruikt de echte workoutdatabase.
+// ==========================================
+
 function addMessage(sender,message){
  const el=document.createElement("div");
  el.className="message "+(sender==="Jij"?"me":"bot");
@@ -824,51 +892,100 @@ function addMessage(sender,message){
  $("chat").appendChild(el);
  $("chat").scrollTop=$("chat").scrollHeight;
 }
-function coachAnswer(q){
- q=q.toLowerCase();
- if(q.includes("schema")||q.includes("week")){
-  return "Voorbeeld van een trainingsweek:\n\n"+
+function categoryFromQuestion(q){
+ if(/herstel|recovery|rustig|rustdag/.test(q))return "recovery";
+ if(/sprint|explosief|acceleratie/.test(q))return "sprint";
+ if(/klim|berg|heuvel|climb/.test(q))return "climb";
+ if(/vo2|interval|anaeroob/.test(q))return "vo2";
+ if(/threshold|drempel|ftp/.test(q))return "threshold";
+ if(/sweet.spot|sst/.test(q))return "sweet";
+ if(/endurance|duur|conditie|basis/.test(q))return "endurance";
+ return null;
+}
+function requestedMinutes(q){
+ const matches=[...q.matchAll(/(\d+)\s*(minuten|minuut|min|uur|uren)/g)];
+ if(!matches.length)return null;
+ const match=matches[0];
+ const amount=Number(match[1]);
+ return match[2].startsWith("uur")?amount*60:amount;
+}
+function recommendWorkouts(category,minutes,count=4){
+ let list=workouts.filter(w=>
+  !category||w.category===category
+ );
+ const target=minutes||60;
+ list.sort((a,b)=>
+  Math.abs(a.minutes-target)-Math.abs(b.minutes-target)
+  ||a.minutes-b.minutes
+ );
+ return list.slice(0,count);
+}
+function workoutListText(list){
+ return list.map(w=>{
+  const c=categories.find(c=>c.id===w.category);
+  return "• "+w.name+" ("+w.minutes+" min, "+c.name+")";
+ }).join("\n");
+}
+function coachAnswer(question){
+ const q=question.toLowerCase();
+ const cat=categoryFromQuestion(q);
+ const minutes=requestedMinutes(q);
+
+ if(/schema|weekplan|weekplanning/.test(q)){
+  const pick=(category,target)=>{
+   const a=recommendWorkouts(category,target,1);
+   return a.length?a[0].name:"Rust";
+  };
+  return "Hier is een voorbeeldweek met ECHTE Zwift-workoutnamen:\n\n"+
    "Maandag: rust\n"+
-   "Dinsdag: Sweet Spot Intro\n"+
+   "Dinsdag: "+pick("sweet",55)+"\n"+
    "Woensdag: rust\n"+
-   "Donderdag: Foundation 40\n"+
+   "Donderdag: "+pick("endurance",50)+"\n"+
    "Vrijdag: rust\n"+
-   "Zaterdag: Endurance 75\n"+
-   "Zondag: Recovery Cruise of rust\n\n"+
-   "Je vindt deze trainingen in de Zwift-bibliotheek. "+
-   "Pas ze aan je niveau en herstel aan.";
+   "Zaterdag: "+pick("endurance",85)+"\n"+
+   "Zondag: "+pick("recovery",30)+" of rust\n\n"+
+   "Dit is een algemeen voorstel en geen persoonlijk "+
+   "belastingsschema. Alle genoemde workouts staan "+
+   "in jouw bibliotheek en zijn afzonderlijk in te plannen.";
  }
- if(q.includes("zwift")||q.includes("workout")||q.includes("training")){
-  return "In de nieuwe Zwift-bibliotheek staan "+
-   workouts.length+" trainingen!\n\n"+
-   "Endurance: rustig je basis verbeteren.\n"+
-   "Sweet Spot: stevige duurblokken.\n"+
-   "Threshold: werken rond je FTP.\n"+
-   "VO2 Max: zware aerobe intervallen.\n"+
-   "Sprinting: explosieve inspanningen.\n"+
-   "Climbing: lange klimblokken.\n\n"+
-   "Kies de categorie die past bij je doel.";
- }
- if(q.includes("ftp")||q.includes("watt")){
-  return "Je ingestelde FTP is "+ftp+" watt.\n\n"+
-   "65% FTP: "+watts(65)+" W\n"+
-   "90% FTP: "+watts(90)+" W\n"+
-   "100% FTP: "+watts(100)+" W\n"+
-   "115% FTP: "+watts(115)+" W.";
- }
- if(q.includes("doel")||q.includes("voortgang")||q.includes("kilometer")){
-  return "Je hebt deze week "+completedKm().toFixed(1)+
+
+ if(/voortgang|kilometer|weekdoel/.test(q)){
+  return "Deze week heb je "+completedKm().toFixed(1)+
    " van "+data.goal+" km afgerond ("+percent()+"%).\n"+
-   "Afgeronde ritten: "+weekly().filter(t=>t.done).length+".";
+   "Afgeronde trainingen: "+
+   weekly().filter(t=>t.done).length+".";
  }
- if(q.includes("herstel")||q.includes("moe")||q.includes("rust")){
-  return "Herstel is belangrijk! Neem een rustdag "+
-   "of kies een korte Recovery Cruise. Bij pijn of "+
-   "aanhoudende klachten kun je beter de belasting verminderen.";
+
+ if(/mijn ftp|hoeveel watt|vermogen/.test(q)){
+  return "Je hebt "+ftp+" watt ingesteld als FTP.\n"+
+   "Dat gebruikt de coach als referentie, maar "+
+   "de originele workoutintensiteiten bekijk je "+
+   "in Zwift of de workoutcatalogus.";
  }
- return "Ik kan helpen met weekschema's, FTP, "+
-  "trainingscategorieën, herstel en je voortgang.\n\n"+
-  "Ik ben een gratis regelgebaseerde coach, geen echte AI-chatbot.";
+
+ if(cat||/advies|aanrad|voorstel|workout|training|zwift|kies/.test(q)){
+  const chosen=cat||"endurance";
+  const c=categories.find(c=>c.id===chosen);
+  const list=recommendWorkouts(chosen,minutes,5);
+  return "Ik raad deze bestaande Zwift-workouts aan:\n\n"+
+   workoutListText(list)+"\n\n"+
+   "Categorie: "+c.name+"\n"+
+   (minutes?"Ik heb gezocht naar ongeveer "+minutes+" minuten.\n":"")+
+   "Kies er één in het Zwift-tabblad en voeg hem "+
+   "toe aan je kalender.\n\n"+
+   "Doe niet elke dag een intensieve training. "+
+   "Wissel belasting en herstel af.";
+ }
+
+ return "Ik ken "+workouts.length+" Zwift-workouts. 🚴\n\n"+
+  "Probeer vragen zoals:\n"+
+  "• Adviseer een Endurance training van 60 minuten\n"+
+  "• Kies een Sweet Spot workout\n"+
+  "• Welke VO2 Max training duurt 45 minuten?\n"+
+  "• Welke klimtraining raad je aan?\n"+
+  "• Maak een weekschema\n"+
+  "• Hoe gaat mijn voortgang?\n\n"+
+  "Ik gebruik slimme vaste regels en geen betaalde AI.";
 }
 function askCoach(q){
  addMessage("Jij",q);
@@ -881,7 +998,11 @@ $("chatForm").onsubmit=e=>{
  askCoach(q);
  $("chatInput").value="";
 };
-addMessage("Coach","Hoi! 👋 Je Zwift-bibliotheek heeft nu 60 workouts, verdeeld over zes categorieën. Waar wil je vandaag aan werken?");
+addMessage("Coach",
+ "Hoi! 👋 Ik ken nu "+workouts.length+
+ " echte Zwift-workoutnamen uit zeven categorieën. "+
+ "Vraag welke workout past bij jouw trainingsdoel!"
+);
 
 // APP STARTEN
 function render(){
