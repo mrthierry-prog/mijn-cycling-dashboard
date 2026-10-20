@@ -3,1310 +3,893 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mijn Cycling Training Dashboard</title>
-
 <style>
 :root{
-  --bg:#100d1c;
-  --panel:#211832;
-  --panel2:#30243f;
-  --purple:#a855f7;
-  --light:#c084fc;
-  --text:#f5f0ff;
-  --muted:#b6a8ca;
-  --green:#31d69b;
-  --border:#423251;
+ --bg:#100d1c;--panel:#211832;--panel2:#30243f;
+ --purple:#a855f7;--light:#c084fc;--text:#f5f0ff;
+ --muted:#b6a8ca;--green:#31d69b;--border:#423251;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
-}
-header{
-  padding:22px;
-  background:#191126;
-  border-bottom:1px solid var(--border);
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:20px;background:#191126;border-bottom:1px solid var(--border)}
 header h1{margin:0;font-size:22px}
-header p{margin:6px 0;color:var(--muted)}
-nav{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  background:#191126;
-  padding:12px;
-}
-button,input,select,textarea{font:inherit}
-button{
-  border:0;
-  background:var(--purple);
-  color:white;
-  padding:11px 15px;
-  border-radius:10px;
-  cursor:pointer;
-}
-button:hover{filter:brightness(1.13)}
-button:focus-visible,input:focus-visible,
-select:focus-visible,textarea:focus-visible{
-  outline:2px solid var(--light);
-  outline-offset:2px;
-}
-nav button{
-  background:#30223e;
-  white-space:nowrap;
-}
+header p{margin:5px 0;color:var(--muted)}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#191126}
+button,input,select{font:inherit}
+button{background:var(--purple);border:0;color:white;padding:11px 15px;border-radius:10px;cursor:pointer}
+button:hover{filter:brightness(1.14)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+button.secondary{background:#48345f}
+button.danger{background:#65364e}
+nav button{background:#30223e;white-space:nowrap}
 nav button.active{background:var(--purple)}
-main{
-  max-width:1150px;
-  margin:auto;
-  padding:20px;
-}
+main{max-width:1150px;margin:auto;padding:20px}
 .page{display:none}
 .page.active{display:block}
-.card{
-  background:var(--panel);
-  padding:20px;
-  border:1px solid var(--border);
-  border-radius:16px;
-  margin-bottom:18px;
-}
+.card{background:var(--panel);padding:20px;border:1px solid var(--border);border-radius:16px;margin-bottom:18px}
 .card h2,.card h3{margin-top:0}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-  gap:15px;
-}
-.stat{
-  font-size:30px;
-  font-weight:bold;
-  color:var(--light);
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .small{font-size:13px;color:var(--muted)}
-label{font-size:14px;color:var(--muted)}
-input,select,textarea{
-  width:100%;
-  background:#30243f;
-  color:white;
-  border:1px solid #59456e;
-  border-radius:9px;
-  padding:12px;
-  margin:7px 0 13px;
-}
-textarea{resize:vertical}
+.stat{font-size:30px;font-weight:bold;color:var(--light)}
+label{display:block;color:var(--muted);font-size:14px;margin-top:8px}
+input,select{width:100%;background:var(--panel2);color:white;border:1px solid #59456e;border-radius:9px;padding:12px;margin:7px 0 13px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1}
-.secondary{background:#48345f}
-.danger{background:#65364e}
-.progress{
-  height:12px;
-  background:#3a2b4b;
-  overflow:hidden;
-  border-radius:20px;
-}
-.progress div{
-  height:100%;
-  width:0;
-  background:linear-gradient(90deg,#7c3aed,#c084fc);
-}
-.training{
-  display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-  background:var(--panel2);
-  border-radius:12px;
-  padding:13px;
-  margin:9px 0;
-}
+.progress{height:12px;background:#3a2b4b;border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,#7c3aed,#c084fc)}
+.training{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel2);padding:13px;border-radius:12px;margin:9px 0}
 .training .info{flex:1;min-width:150px}
 .training strong{display:block;margin-bottom:5px}
 .training.done{opacity:.65}
 .training.done strong{text-decoration:line-through}
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,minmax(0,1fr));
-  gap:5px;
-}
-.day{
-  min-height:75px;
-  background:#30243f;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:7px;
-  cursor:pointer;
-  font-size:12px;
-}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.day{min-height:74px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:7px;cursor:pointer;font-size:12px}
 .day.today{background:#493164}
-.day.has{border-color:var(--purple)}
 .day.selected{outline:2px solid var(--light)}
-.dot{
-  width:8px;height:8px;
-  background:var(--green);
-  border-radius:50%;
-  margin:8px 0 4px;
-}
-.weekday{text-align:center;color:var(--muted);font-size:12px}
-.chat{
-  background:#171122;
-  height:310px;
-  overflow-y:auto;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:12px;
-}
-.message{
-  padding:11px;
-  border-radius:12px;
-  margin:9px 0;
-  max-width:90%;
-  white-space:pre-wrap;
-  line-height:1.5;
-}
+.day.has{border-color:var(--purple)}
+.weekday{text-align:center;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;background:var(--green);border-radius:50%;margin:8px 0 4px}
+.chat{height:310px;overflow:auto;background:#171122;padding:12px;border-radius:12px;margin-bottom:12px}
+.message{max-width:90%;margin:9px 0;padding:11px;border-radius:12px;white-space:pre-wrap;line-height:1.5}
 .me{background:#543487;margin-left:auto}
 .bot{background:#342841}
-
-/* ZWIFT */
-.zwift-hero{
-  background:linear-gradient(120deg,#422164,#211832);
-  border:1px solid #68438d;
-}
-.workout-card{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.workout-card p{margin:4px 0}
-.workout-card button{margin-top:auto}
-.tag{
-  display:inline-block;
-  font-size:12px;
-  color:#e6d6ff;
-  background:#51356c;
-  border-radius:7px;
-  padding:6px 9px;
-}
-.filters{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-bottom:18px;
-}
-.filters button{
-  background:#342447;
-  font-size:13px;
-}
-.filters button.selected{background:var(--purple)}
-.bar-preview{
-  display:flex;
-  align-items:flex-end;
-  height:65px;
-  gap:3px;
-  padding:5px 0;
-}
-.bar-preview div{
-  min-width:3px;
-  border-radius:3px 3px 0 0;
-}
-.segment{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:12px 0;
-  border-bottom:1px solid var(--border);
-}
-.segment:last-child{border-bottom:0}
-.segment-details{max-width:70%}
-.segment strong{display:block}
-.segment .small{margin-top:4px}
 .hidden{display:none!important}
-.notice{
-  padding:12px;
-  background:#332444;
-  border-left:3px solid var(--light);
-  border-radius:8px;
-  font-size:13px;
-  line-height:1.6;
-}
-footer{
-  color:var(--muted);
-  text-align:center;
-  padding:30px;
-}
+.hero{background:linear-gradient(120deg,#452269,#211832);border-color:#704594}
+.hero h2{margin-bottom:8px}
+.category-card{display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:transform .15s,border-color .15s}
+.category-card:hover{transform:translateY(-3px);border-color:var(--light)}
+.category-card h3{margin:0}
+.category-icon{font-size:30px}
+.category-count{color:var(--light);font-size:13px;margin-top:auto}
+.workout-card{display:flex;flex-direction:column;gap:9px}
+.workout-card h3{margin:3px 0}
+.workout-card button{margin-top:auto}
+.tag{display:inline-block;width:max-content;padding:6px 9px;background:#51356c;border-radius:7px;font-size:12px}
+.workout-chart{display:flex;align-items:flex-end;gap:2px;height:75px;width:100%;overflow:hidden}
+.workout-chart div{min-width:1px;border-radius:3px 3px 0 0}
+.details-chart{height:140px;background:#171222;border-radius:10px;padding:10px}
+.interval{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.interval:last-child{border:0}
+.interval strong{display:block}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters button{background:#342447;font-size:13px}
+.filters button.selected{background:var(--purple)}
+.notice{padding:12px;background:#332444;border-left:3px solid var(--light);border-radius:8px;line-height:1.6;font-size:13px}
+footer{text-align:center;color:var(--muted);padding:30px}
 @media(max-width:600px){
-  main{padding:12px}
-  header h1{font-size:19px}
-  .card{padding:15px}
-  .day{min-height:56px;padding:5px}
-  .segment-details{max-width:62%}
+ main{padding:12px}
+ header h1{font-size:19px}
+ .card{padding:15px}
+ .day{min-height:55px;padding:5px}
 }
 </style>
 </head>
-
 <body>
 <header>
-  <h1>🚴 Mijn Cycling Training Dashboard</h1>
-  <p>Train slimmer. Word sterker. 💜</p>
+ <h1>🚴 Mijn Cycling Training Dashboard</h1>
+ <p>Train slimmer. Word sterker. 💜</p>
 </header>
-
 <nav>
-  <button class="active" data-page="dashboard">🏠 Dashboard</button>
-  <button data-page="planning">🚴 Planning</button>
-  <button data-page="calendarPage">📅 Kalender</button>
-  <button data-page="goals">🎯 Doelen</button>
-  <button data-page="zwift">⚡ Zwift</button>
-  <button data-page="coach">🤖 Coach</button>
+ <button class="active" data-page="dashboard">🏠 Dashboard</button>
+ <button data-page="planning">🚴 Planning</button>
+ <button data-page="calendarPage">📅 Kalender</button>
+ <button data-page="goals">🎯 Doelen</button>
+ <button data-page="zwift">⚡ Zwift</button>
+ <button data-page="coach">🤖 Coach</button>
 </nav>
-
 <main>
 
-<!-- DASHBOARD -->
-<section id="dashboard" class="page active">
-  <h2>Welkom terug! 👋</h2>
-  <p class="small">Jouw trainingen en doelen in één overzicht.</p>
-
-  <div class="grid">
-    <div class="card">
-      <div class="small">Kilometers deze week</div>
-      <div class="stat" id="kmStat">0 km</div>
-    </div>
-    <div class="card">
-      <div class="small">Trainingen deze week</div>
-      <div class="stat" id="rideStat">0</div>
-    </div>
-    <div class="card">
-      <div class="small">Afgeronde trainingen</div>
-      <div class="stat" id="doneStat">0</div>
-    </div>
-    <div class="card">
-      <div class="small">Weekdoel</div>
-      <div class="stat" id="goalStat">100 km</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🎯 Jouw weekdoel</h2>
-    <div class="progress"><div id="weekProgress"></div></div>
-    <p class="small" id="progressText"></p>
-  </div>
-
-  <div class="card">
-    <h2>🚴 Komende trainingen</h2>
-    <div id="upcoming"></div>
-    <button onclick="showPage('planning')">+ Training toevoegen</button>
-  </div>
+<section class="page active" id="dashboard">
+ <h2>Welkom terug! 👋</h2>
+ <p class="small">Jouw wielrentrainingen in één overzicht.</p>
+ <div class="grid">
+  <div class="card"><div class="small">Kilometers deze week</div><div class="stat" id="kmStat">0 km</div></div>
+  <div class="card"><div class="small">Trainingen deze week</div><div class="stat" id="rideStat">0</div></div>
+  <div class="card"><div class="small">Afgeronde trainingen</div><div class="stat" id="doneStat">0</div></div>
+  <div class="card"><div class="small">Weekdoel</div><div class="stat" id="goalStat">100 km</div></div>
+ </div>
+ <div class="card">
+  <h2>🎯 Jouw weekdoel</h2>
+  <div class="progress"><div id="weekProgress"></div></div>
+  <p class="small" id="progressText"></p>
+ </div>
+ <div class="card">
+  <h2>🚴 Komende trainingen</h2>
+  <div id="upcoming"></div>
+  <button onclick="showPage('planning')">+ Training toevoegen</button>
+ </div>
 </section>
 
-<!-- PLANNING -->
-<section id="planning" class="page">
-  <h2>🚴 Trainingsplanning</h2>
-
-  <div class="card">
-    <h2>Nieuwe training</h2>
-    <form id="trainingForm">
-      <label>Naam training</label>
-      <input id="trainName" required maxlength="100"
-             placeholder="Bijv. Zwift Sweet Spot">
-
-      <label>Datum</label>
-      <input type="date" id="trainDate" required>
-
-      <label>Soort training</label>
-      <select id="trainType">
-        <option>Duurtraining</option>
-        <option>Intervaltraining</option>
-        <option>Hersteltraining</option>
-        <option>Tempotraining</option>
-        <option>Zwift</option>
-        <option>Vrije rit</option>
-      </select>
-
-      <div class="row">
-        <div>
-          <label>Afstand (km)</label>
-          <input type="number" id="trainKm"
-                 value="30" min="0" max="1000" step="0.1" required>
-        </div>
-        <div>
-          <label>Duur (minuten)</label>
-          <input type="number" id="trainMinutes"
-                 value="60" min="1" max="1440" required>
-        </div>
-      </div>
-
-      <button type="submit">Training opslaan 💜</button>
-    </form>
-  </div>
-
-  <div class="card">
-    <h2>Mijn trainingen</h2>
-    <div id="trainingList"></div>
-  </div>
+<section class="page" id="planning">
+ <h2>🚴 Trainingsplanning</h2>
+ <div class="card">
+  <h2>Nieuwe training</h2>
+  <form id="trainingForm">
+   <label>Naam training</label>
+   <input id="trainName" maxlength="100" required placeholder="Bijv. Zwift intervaltraining">
+   <label>Datum</label>
+   <input id="trainDate" type="date" required>
+   <label>Soort training</label>
+   <select id="trainType">
+    <option>Duurtraining</option>
+    <option>Intervaltraining</option>
+    <option>Hersteltraining</option>
+    <option>Tempotraining</option>
+    <option>Zwift</option>
+    <option>Vrije rit</option>
+   </select>
+   <div class="row">
+    <div><label>Afstand (km)</label><input id="trainKm" type="number" min="0" max="1000" step="0.1" value="30" required></div>
+    <div><label>Duur (minuten)</label><input id="trainMinutes" type="number" min="1" max="1440" value="60" required></div>
+   </div>
+   <button type="submit">Training opslaan 💜</button>
+  </form>
+ </div>
+ <div class="card"><h2>Mijn trainingen</h2><div id="trainingList"></div></div>
 </section>
 
-<!-- KALENDER -->
-<section id="calendarPage" class="page">
-  <h2>📅 Trainingskalender</h2>
+<section class="page" id="calendarPage">
+ <h2>📅 Trainingskalender</h2>
+ <div class="card">
+  <div class="row">
+   <button class="secondary" onclick="changeMonth(-1)">← Vorige</button>
+   <button class="secondary" onclick="changeMonth(1)">Volgende →</button>
+  </div>
+  <h2 id="monthTitle" style="text-align:center"></h2>
+  <div class="calendar" id="calendarGrid"></div>
+ </div>
+ <div class="card"><h2>Trainingen op gekozen dag</h2><div id="selectedDay"></div></div>
+</section>
 
+<section class="page" id="goals">
+ <h2>🎯 Mijn doelen</h2>
+ <div class="card">
+  <label>Wekelijks kilometerdoel</label>
+  <input id="weeklyGoal" type="number" min="1" max="5000">
+  <button onclick="saveGoal()">Doel opslaan</button>
+ </div>
+ <div class="card">
+  <h2>Jouw voortgang</h2>
+  <div class="progress"><div id="goalProgress"></div></div>
+  <p id="goalDescription"></p>
+ </div>
+</section>
+
+<section class="page" id="zwift">
+ <h2>⚡ Zwift Training Center</h2>
+ <p class="small">Ontdek je training. Kies je categorie. Bouw je conditie op.</p>
+
+ <div class="card hero">
+  <h2>⚡ Workout Library</h2>
+  <p>60 trainingen verdeeld over zes categorieën.</p>
+  <div class="row">
+   <div>
+    <label>Jouw FTP (watt)</label>
+    <input id="ftpInput" type="number" min="50" max="600" value="200">
+   </div>
+   <div style="align-self:end"><button onclick="saveFTP()">FTP opslaan</button></div>
+  </div>
+  <p class="small">200 watt is een voorbeeldwaarde, geen schatting van jouw FTP.</p>
+ </div>
+
+ <div id="categoryView">
+  <h2>🎯 Kies je trainingscategorie</h2>
+  <div id="categoryGrid" class="grid"></div>
+ </div>
+
+ <div id="libraryView" class="hidden">
+  <button class="secondary" onclick="backToCategories()">← Alle categorieën</button>
+  <h2 id="libraryTitle" style="margin-top:22px"></h2>
+  <p class="small" id="libraryDescription"></p>
   <div class="card">
-    <div class="row">
-      <button class="secondary" onclick="changeMonth(-1)">← Vorige</button>
-      <button class="secondary" onclick="changeMonth(1)">Volgende →</button>
+   <label>Zoek een workout</label>
+   <input id="workoutSearch" placeholder="Zoek op naam...">
+   <div class="row">
+    <div>
+     <label>Duur</label>
+     <select id="durationFilter">
+      <option value="all">Alle lengtes</option>
+      <option value="short">Tot 45 minuten</option>
+      <option value="medium">46–75 minuten</option>
+      <option value="long">Langer dan 75 minuten</option>
+     </select>
     </div>
-    <h2 id="monthTitle" style="text-align:center"></h2>
-    <div id="calendarGrid" class="calendar"></div>
-  </div>
-
-  <div class="card">
-    <h2>Trainingen op gekozen dag</h2>
-    <div id="selectedDay"></div>
-  </div>
-</section>
-
-<!-- DOELEN -->
-<section id="goals" class="page">
-  <h2>🎯 Mijn doelen</h2>
-
-  <div class="card">
-    <label>Wekelijks kilometerdoel</label>
-    <input type="number" id="weeklyGoal" min="1" max="5000">
-    <button onclick="saveGoal()">Doel opslaan</button>
-  </div>
-
-  <div class="card">
-    <h2>Jouw voortgang</h2>
-    <div class="progress"><div id="goalProgress"></div></div>
-    <p id="goalDescription"></p>
-  </div>
-</section>
-
-<!-- ZWIFT -->
-<section id="zwift" class="page">
-  <h2>⚡ Zwift Training Center</h2>
-  <p class="small">
-    Kies een training, ontdek de intervallen en plan je workout.
-  </p>
-
-  <div class="card zwift-hero">
-    <h2>⚡ Jouw trainingsvermogen</h2>
-    <p class="small">
-      FTP is het vermogen dat je ongeveer een uur
-      maximaal kunt volhouden.
-    </p>
-    <div class="row">
-      <div>
-        <label>Mijn FTP (watt)</label>
-        <input type="number" id="ftpInput"
-               min="50" max="600" value="200">
-      </div>
-      <div style="align-self:end">
-        <button onclick="saveFTP()">FTP opslaan</button>
-      </div>
+    <div>
+     <label>Moeilijkheid</label>
+     <select id="difficultyFilter">
+      <option value="all">Alle niveaus</option>
+      <option value="1">1 ster</option>
+      <option value="2">2 sterren</option>
+      <option value="3">3 sterren</option>
+      <option value="4">4 sterren</option>
+      <option value="5">5 sterren</option>
+     </select>
     </div>
-    <p class="small">
-      Ken je jouw FTP niet? Laat voorlopig 200 W
-      als voorbeeld staan. Dit is geen schatting
-      van jouw persoonlijke FTP.
-    </p>
+   </div>
+   <p class="small" id="workoutCount"></p>
   </div>
+  <div class="grid" id="workoutGrid"></div>
+ </div>
 
-  <div class="card">
-    <h2>🔎 Zoek een training</h2>
-    <input id="workoutSearch"
-           placeholder="Zoek bijvoorbeeld Sweet Spot of VO2">
-    <div class="filters" id="workoutFilters"></div>
-    <p class="small" id="workoutCount"></p>
+ <div id="workoutDetailView" class="hidden">
+  <button class="secondary" onclick="backToLibrary()">← Terug naar workouts</button>
+  <div class="card" style="margin-top:16px">
+   <span class="tag" id="detailCategory"></span>
+   <h2 id="detailName" style="margin-top:14px"></h2>
+   <p class="small" id="detailMeta"></p>
+   <p id="detailDescription"></p>
+   <h3>📊 Vermogensprofiel</h3>
+   <div class="workout-chart details-chart" id="detailChart"></div>
+   <p class="small">De hoogte van elk blok geeft het percentage van je FTP aan.</p>
+   <h3>⚡ Trainingsblokken</h3>
+   <div id="detailSegments"></div>
+   <h3>📅 Workout inplannen</h3>
+   <label>Datum</label>
+   <input id="workoutDate" type="date">
+   <label>Geplande afstand (km)</label>
+   <input id="workoutDistance" type="number" min="0" max="1000" step="0.1" value="0">
+   <p class="small">Je kunt je daadwerkelijke afstand later bijhouden als afgeronde training.</p>
+   <button onclick="planWorkout()">+ Toevoegen aan mijn kalender</button>
   </div>
+ </div>
 
-  <div id="zwiftWorkouts" class="grid"></div>
-
-  <div id="workoutDetails" class="card hidden">
-    <h2 id="detailName"></h2>
-    <p class="small" id="detailMeta"></p>
-    <p id="detailDescription"></p>
-
-    <h3>📊 Opbouw van je training</h3>
-    <div id="detailChart" class="bar-preview"
-         style="height:120px"></div>
-
-    <h3>⚡ Intervallen en wattages</h3>
-    <div id="detailSegments"></div>
-
-    <h3>📅 Inplannen</h3>
-    <label>Datum van je workout</label>
-    <input type="date" id="workoutDate">
-
-    <label>Geplande afstand in km (zelf invullen)</label>
-    <input type="number" id="workoutDistance"
-           min="0" max="1000" step="0.1" value="0">
-
-    <button onclick="planSelectedWorkout()">
-      + Toevoegen aan mijn kalender
-    </button>
-    <button class="secondary" onclick="closeWorkout()">
-      Sluiten
-    </button>
+ <div class="card">
+  <div class="notice">
+   De workoutbibliotheek bevat zelf samengestelde trainingsvoorbeelden,
+   geen officiële Zwift-workouts. Vermogenspercentages zijn richtlijnen.
+   De website start Zwift niet automatisch en bedient je fietstrainer niet.
   </div>
-
-  <div class="card">
-    <div class="notice">
-      Dit zijn door het dashboard samengestelde
-      workouts, geen gegarandeerde officiële
-      Zwift-workouts. Zoek in Zwift naar een
-      vergelijkbare training of stel hem zelf samen.
-      De website kan Zwift niet automatisch starten
-      en heeft geen verbinding met je trainer.
-    </div>
-  </div>
+ </div>
 </section>
 
-<!-- COACH -->
-<section id="coach" class="page">
-  <h2>🤖 Cycling Coach</h2>
-  <div class="card">
-    <p class="small">
-      Jouw gratis regelgebaseerde trainingscoach.
-    </p>
-    <div id="chat" class="chat"></div>
-
-    <form id="chatForm">
-      <input id="chatInput" required
-             placeholder="Vraag bijvoorbeeld: maak een weekschema">
-      <button type="submit">Versturen ➤</button>
-    </form>
-
-    <div class="row">
-      <button class="secondary"
-              onclick="askCoach('Maak een weekschema')">
-        📅 Weekschema
-      </button>
-      <button class="secondary"
-              onclick="askCoach('Welke Zwift training past bij mij?')">
-        ⚡ Zwift advies
-      </button>
-      <button class="secondary"
-              onclick="askCoach('Hoe gaat mijn voortgang?')">
-        📈 Voortgang
-      </button>
-    </div>
+<section class="page" id="coach">
+ <h2>🤖 Cycling Coach</h2>
+ <div class="card">
+  <p class="small">Een gratis chatcoach op basis van vaste trainingsregels.</p>
+  <div class="chat" id="chat"></div>
+  <form id="chatForm">
+   <input id="chatInput" required placeholder="Vraag bijvoorbeeld: maak een weekschema">
+   <button type="submit">Versturen ➤</button>
+  </form>
+  <div class="row">
+   <button class="secondary" onclick="askCoach('Maak een weekschema')">📅 Weekschema</button>
+   <button class="secondary" onclick="askCoach('Welke Zwift training raad je aan?')">⚡ Zwift</button>
+   <button class="secondary" onclick="askCoach('Hoe gaat mijn voortgang?')">📈 Voortgang</button>
   </div>
+ </div>
 </section>
-
 </main>
-
 <footer>Mijn Cycling Training Dashboard 💜</footer>
 
 <script>
-// -----------------------------------------
-// OPSLAG - COMPATIBEL MET VORIGE VERSIE
-// -----------------------------------------
 const KEY="cycling_dashboard_neon_v1";
 const FTP_KEY="cycling_dashboard_ftp_v1";
 const $=id=>document.getElementById(id);
 
 function localDate(d=new Date()){
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+ const y=d.getFullYear();
+ const m=String(d.getMonth()+1).padStart(2,"0");
+ const day=String(d.getDate()).padStart(2,"0");
+ return `${y}-${m}-${day}`;
 }
 function parseDate(s){
-  const [y,m,d]=s.split("-").map(Number);
-  return new Date(y,m-1,d);
+ const [y,m,d]=s.split("-").map(Number);
+ return new Date(y,m-1,d);
 }
 function formatDate(s){
-  return parseDate(s).toLocaleDateString("nl-NL",{
-    day:"numeric",month:"short",year:"numeric"
-  });
+ return parseDate(s).toLocaleDateString("nl-NL",{
+  day:"numeric",month:"short",year:"numeric"
+ });
 }
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  }[c]));
+function esc(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
 }
-function safeNumber(n,fallback=0){
-  const value=Number(n);
-  return Number.isFinite(value)?value:fallback;
-}
+function num(n){return Number.isFinite(Number(n))?Number(n):0}
 
 let data={goal:100,trainings:[]};
 try{
-  const old=JSON.parse(localStorage.getItem(KEY));
-  if(old && Array.isArray(old.trainings)){
-    data={
-      goal:safeNumber(old.goal,100)||100,
-      trainings:old.trainings
-    };
-  }
-}catch(e){
-  console.warn("Opslag kon niet worden gelezen.",e);
-}
+ const old=JSON.parse(localStorage.getItem(KEY));
+ if(old&&Array.isArray(old.trainings)){
+  data={goal:num(old.goal)||100,trainings:old.trainings};
+ }
+}catch(e){console.warn("Opslag niet beschikbaar",e)}
 
 let ftp=200;
 try{
-  const savedFTP=Number(localStorage.getItem(FTP_KEY));
-  if(savedFTP>=50&&savedFTP<=600)ftp=savedFTP;
+ const stored=Number(localStorage.getItem(FTP_KEY));
+ if(stored>=50&&stored<=600)ftp=stored;
 }catch(e){}
 
 let calendarMonth=new Date();
 let selectedDate=localDate();
 
 function save(){
-  try{
-    localStorage.setItem(KEY,JSON.stringify(data));
-    return true;
-  }catch(e){
-    alert("Opslaan mislukt. Controleer je browseropslag.");
-    return false;
-  }
+ try{
+  localStorage.setItem(KEY,JSON.stringify(data));
+  return true;
+ }catch(e){
+  alert("Opslaan is mislukt. Controleer de browseropslag.");
+  return false;
+ }
 }
-
 function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.toggle("active",p.id===id);
-  });
-  document.querySelectorAll("nav button").forEach(b=>{
-    b.classList.toggle("active",b.dataset.page===id);
-  });
-  render();
-  window.scrollTo(0,0);
+ document.querySelectorAll(".page").forEach(p=>
+  p.classList.toggle("active",p.id===id));
+ document.querySelectorAll("nav button").forEach(b=>
+  b.classList.toggle("active",b.dataset.page===id));
+ render();
+ window.scrollTo(0,0);
 }
 document.querySelectorAll("nav button").forEach(b=>{
-  b.onclick=()=>showPage(b.dataset.page);
+ b.onclick=()=>showPage(b.dataset.page);
 });
 
-// -----------------------------------------
-// DASHBOARD
-// -----------------------------------------
 function weekRange(){
-  const now=parseDate(localDate());
-  const monday=new Date(now);
-  monday.setDate(now.getDate()-(now.getDay()+6)%7);
-  const sunday=new Date(monday);
-  sunday.setDate(monday.getDate()+6);
-  return [localDate(monday),localDate(sunday)];
+ const now=parseDate(localDate());
+ const monday=new Date(now);
+ monday.setDate(now.getDate()-(now.getDay()+6)%7);
+ const sunday=new Date(monday);
+ sunday.setDate(monday.getDate()+6);
+ return [localDate(monday),localDate(sunday)];
 }
 function weekly(){
-  const [start,end]=weekRange();
-  return data.trainings.filter(t=>
-    t.date>=start&&t.date<=end
-  );
+ const [start,end]=weekRange();
+ return data.trainings.filter(t=>t.date>=start&&t.date<=end);
 }
 function completedKm(){
-  return weekly().filter(t=>t.done).reduce(
-    (sum,t)=>sum+safeNumber(t.km),0
-  );
+ return weekly().filter(t=>t.done).reduce((s,t)=>s+num(t.km),0);
 }
 function percent(){
-  return Math.min(100,Math.round(
-    completedKm()/data.goal*100
-  ));
+ return Math.min(100,Math.round(completedKm()/data.goal*100));
 }
 function renderDashboard(){
-  const week=weekly();
-  $("kmStat").textContent=completedKm().toFixed(1)+" km";
-  $("rideStat").textContent=week.length;
-  $("doneStat").textContent=week.filter(t=>t.done).length;
-  $("goalStat").textContent=data.goal+" km";
-  $("weekProgress").style.width=percent()+"%";
-  $("progressText").textContent=
-    completedKm().toFixed(1)+" van "+
-    data.goal+" km afgerond ("+percent()+"%)";
-
-  const coming=data.trainings
-    .filter(t=>!t.done&&t.date>=localDate())
-    .sort((a,b)=>a.date.localeCompare(b.date))
-    .slice(0,5);
-
-  $("upcoming").innerHTML=coming.length
-    ?coming.map(t=>`
-      <div class="training">
-        <div class="info">
-          <strong>${escapeHtml(t.name)}</strong>
-          <span class="small">
-            ${formatDate(t.date)} •
-            ${escapeHtml(t.type)} •
-            ${safeNumber(t.km)} km
-          </span>
-        </div>
-      </div>`).join("")
-    :'<p class="small">Nog geen komende trainingen.</p>';
+ const w=weekly();
+ $("kmStat").textContent=completedKm().toFixed(1)+" km";
+ $("rideStat").textContent=w.length;
+ $("doneStat").textContent=w.filter(t=>t.done).length;
+ $("goalStat").textContent=data.goal+" km";
+ $("weekProgress").style.width=percent()+"%";
+ $("progressText").textContent=
+  completedKm().toFixed(1)+" van "+data.goal+" km afgerond ("+percent()+"%)";
+ const coming=data.trainings.filter(t=>!t.done&&t.date>=localDate())
+  .sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+ $("upcoming").innerHTML=coming.length?coming.map(t=>`
+ <div class="training"><div class="info">
+ <strong>${esc(t.name)}</strong>
+ <span class="small">${formatDate(t.date)} • ${esc(t.type)} • ${num(t.km)} km</span>
+ </div></div>`).join("")
+ :'<p class="small">Nog geen komende trainingen.</p>';
 }
 
-// -----------------------------------------
-// TRAININGEN
-// -----------------------------------------
 $("trainDate").value=localDate();
-
-$("trainingForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const name=$("trainName").value.trim();
-  const date=$("trainDate").value;
-  const km=Number($("trainKm").value);
-  const minutes=Number($("trainMinutes").value);
-
-  if(!name||!date||!Number.isFinite(km)||
-     km<0||km>1000||!Number.isFinite(minutes)||
-     minutes<1||minutes>1440){
-    alert("Controleer de trainingsgegevens.");
-    return;
-  }
-
-  const training={
-    id:crypto.randomUUID(),
-    name,date,
-    type:$("trainType").value,
-    km,minutes,done:false
-  };
-  data.trainings.push(training);
-  if(!save()){
-    data.trainings.pop();
-    return;
-  }
-  $("trainingForm").reset();
-  $("trainDate").value=localDate();
-  render();
-});
-
+$("trainingForm").onsubmit=e=>{
+ e.preventDefault();
+ const name=$("trainName").value.trim();
+ const date=$("trainDate").value;
+ const km=Number($("trainKm").value);
+ const minutes=Number($("trainMinutes").value);
+ if(!name||!date||!Number.isFinite(km)||km<0||km>1000||
+    !Number.isFinite(minutes)||minutes<1||minutes>1440){
+  alert("Controleer je training.");return;
+ }
+ const t={
+  id:crypto.randomUUID(),name,date,type:$("trainType").value,
+  km,minutes,done:false
+ };
+ data.trainings.push(t);
+ if(!save()){data.trainings.pop();return}
+ $("trainingForm").reset();
+ $("trainDate").value=localDate();
+ render();
+};
 function toggleDone(id){
-  const t=data.trainings.find(t=>String(t.id)===String(id));
-  if(!t)return;
-  t.done=!t.done;
-  save();
-  render();
+ const t=data.trainings.find(t=>String(t.id)===String(id));
+ if(!t)return;
+ t.done=!t.done;save();render();
 }
 function deleteTraining(id){
-  if(!confirm("Deze training verwijderen?"))return;
-  data.trainings=data.trainings.filter(
-    t=>String(t.id)!==String(id)
-  );
-  save();
-  render();
+ if(!confirm("Training verwijderen?"))return;
+ data.trainings=data.trainings.filter(t=>String(t.id)!==String(id));
+ save();render();
 }
 function renderTrainings(){
-  const sorted=[...data.trainings].sort(
-    (a,b)=>a.date.localeCompare(b.date)
-  );
-  $("trainingList").innerHTML=sorted.length
-    ?sorted.map(t=>`
-      <div class="training ${t.done?"done":""}">
-        <div class="info">
-          <strong>${escapeHtml(t.name)}</strong>
-          <span class="small">
-            ${formatDate(t.date)} •
-            ${escapeHtml(t.type)} •
-            ${safeNumber(t.km)} km •
-            ${safeNumber(t.minutes)} min
-          </span>
-        </div>
-        <button class="secondary"
-          data-action="done"
-          data-id="${escapeHtml(t.id)}">
-          ${t.done?"↩ Heropen":"✓ Klaar"}
-        </button>
-        <button class="danger"
-          data-action="delete"
-          data-id="${escapeHtml(t.id)}">🗑</button>
-      </div>`).join("")
-    :'<p class="small">Voeg je eerste training toe!</p>';
+ const sorted=[...data.trainings].sort((a,b)=>a.date.localeCompare(b.date));
+ $("trainingList").innerHTML=sorted.length?sorted.map(t=>`
+ <div class="training ${t.done?"done":""}">
+  <div class="info"><strong>${esc(t.name)}</strong>
+  <span class="small">${formatDate(t.date)} • ${esc(t.type)} •
+  ${num(t.km)} km • ${num(t.minutes)} min</span></div>
+  <button class="secondary" data-action="done" data-id="${esc(t.id)}">
+  ${t.done?"↩ Heropen":"✓ Klaar"}</button>
+  <button class="danger" data-action="delete" data-id="${esc(t.id)}">🗑</button>
+ </div>`).join("")
+ :'<p class="small">Voeg je eerste training toe!</p>';
 }
-$("trainingList").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-action]");
-  if(!b)return;
-  if(b.dataset.action==="done")toggleDone(b.dataset.id);
-  if(b.dataset.action==="delete")deleteTraining(b.dataset.id);
-});
+$("trainingList").onclick=e=>{
+ const b=e.target.closest("button[data-action]");
+ if(!b)return;
+ if(b.dataset.action==="done")toggleDone(b.dataset.id);
+ if(b.dataset.action==="delete")deleteTraining(b.dataset.id);
+};
 
-// -----------------------------------------
-// KALENDER
-// -----------------------------------------
 function changeMonth(n){
-  calendarMonth.setDate(1);
-  calendarMonth.setMonth(calendarMonth.getMonth()+n);
-  renderCalendar();
+ calendarMonth.setDate(1);
+ calendarMonth.setMonth(calendarMonth.getMonth()+n);
+ renderCalendar();
 }
 function renderCalendar(){
-  const y=calendarMonth.getFullYear();
-  const m=calendarMonth.getMonth();
-  $("monthTitle").textContent=
-    calendarMonth.toLocaleDateString("nl-NL",{
-      month:"long",year:"numeric"
-    });
-
-  const grid=$("calendarGrid");
-  grid.innerHTML="";
-  ["Ma","Di","Wo","Do","Vr","Za","Zo"].forEach(d=>{
-    grid.innerHTML+=`<div class="weekday">${d}</div>`;
-  });
-
-  const offset=(new Date(y,m,1).getDay()+6)%7;
-  const days=new Date(y,m+1,0).getDate();
-  for(let i=0;i<offset;i++){
-    grid.innerHTML+="<div></div>";
-  }
-
-  for(let day=1;day<=days;day++){
-    const date=localDate(new Date(y,m,day));
-    const count=data.trainings.filter(
-      t=>t.date===date
-    ).length;
-    const cell=document.createElement("div");
-    cell.className="day"+
-      (count?" has":"")+
-      (date===localDate()?" today":"")+
-      (date===selectedDate?" selected":"");
-    cell.innerHTML=`<strong>${day}</strong>`+
-      (count?`<div class="dot"></div>
-      <span class="small">${count} rit</span>`:"");
-    cell.onclick=()=>{
-      selectedDate=date;
-      renderCalendar();
-    };
-    grid.appendChild(cell);
-  }
-  renderSelectedDay();
+ const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth();
+ $("monthTitle").textContent=calendarMonth.toLocaleDateString("nl-NL",{
+  month:"long",year:"numeric"
+ });
+ const grid=$("calendarGrid");
+ grid.innerHTML="";
+ ["Ma","Di","Wo","Do","Vr","Za","Zo"].forEach(d=>{
+  grid.innerHTML+=`<div class="weekday">${d}</div>`;
+ });
+ const offset=(new Date(y,m,1).getDay()+6)%7;
+ for(let i=0;i<offset;i++)grid.innerHTML+="<div></div>";
+ const days=new Date(y,m+1,0).getDate();
+ for(let day=1;day<=days;day++){
+  const date=localDate(new Date(y,m,day));
+  const count=data.trainings.filter(t=>t.date===date).length;
+  const cell=document.createElement("div");
+  cell.className="day"+(count?" has":"")+
+   (date===localDate()?" today":"")+
+   (date===selectedDate?" selected":"");
+  cell.innerHTML=`<strong>${day}</strong>`+
+   (count?`<div class="dot"></div><span class="small">${count} rit</span>`:"");
+  cell.onclick=()=>{selectedDate=date;renderCalendar()};
+  grid.appendChild(cell);
+ }
+ renderSelectedDay();
 }
 function renderSelectedDay(){
-  const rides=data.trainings.filter(
-    t=>t.date===selectedDate
-  );
-  $("selectedDay").innerHTML=
-    `<p class="small">${formatDate(selectedDate)}</p>`+
-    (rides.length?rides.map(t=>`
-      <div class="training">
-        <div class="info">
-          <strong>${escapeHtml(t.name)}</strong>
-          <span class="small">
-            ${escapeHtml(t.type)} • ${safeNumber(t.km)} km
-            ${t.done?"• Afgerond":""}
-          </span>
-        </div>
-      </div>`).join("")
-    :'<p class="small">Geen trainingen op deze dag.</p>');
+ const rides=data.trainings.filter(t=>t.date===selectedDate);
+ $("selectedDay").innerHTML=`<p class="small">${formatDate(selectedDate)}</p>`+
+ (rides.length?rides.map(t=>`
+ <div class="training"><div class="info"><strong>${esc(t.name)}</strong>
+ <span class="small">${esc(t.type)} • ${num(t.km)} km
+ ${t.done?"• Afgerond":""}</span></div></div>`).join("")
+ :'<p class="small">Geen trainingen op deze dag.</p>');
 }
-
-// -----------------------------------------
-// DOELEN
-// -----------------------------------------
 function saveGoal(){
-  const n=Number($("weeklyGoal").value);
-  if(!Number.isFinite(n)||n<1||n>5000){
-    alert("Vul een geldig doel in.");
-    return;
-  }
-  data.goal=n;
-  save();
-  render();
+ const n=Number($("weeklyGoal").value);
+ if(!Number.isFinite(n)||n<1||n>5000){
+  alert("Vul een geldig doel in.");return;
+ }
+ data.goal=n;save();render();
 }
 function renderGoals(){
-  $("weeklyGoal").value=data.goal;
-  $("goalProgress").style.width=percent()+"%";
-  $("goalDescription").textContent=
-    completedKm().toFixed(1)+" van "+
-    data.goal+" km voltooid ("+percent()+"%).";
+ $("weeklyGoal").value=data.goal;
+ $("goalProgress").style.width=percent()+"%";
+ $("goalDescription").textContent=
+ completedKm().toFixed(1)+" van "+data.goal+" km voltooid ("+percent()+"%).";
 }
 
-// -----------------------------------------
-// ZWIFT WORKOUT BIBLIOTHEEK
-//
-// Segment:
-// [naam, minuten, percentage FTP]
-// -----------------------------------------
-const workouts=[
-  {
-    id:"recovery",
-    name:"Recovery Spin",
-    category:"Herstel",
-    difficulty:1,
-    description:"Een rustige training om de benen los te rijden.",
-    segments:[
-      ["Rustig opwarmen",5,45],
-      ["Herstel",20,50],
-      ["Uitfietsen",5,40]
-    ]
-  },
-  {
-    id:"easy",
-    name:"Easy Endurance",
-    category:"Duur",
-    difficulty:1,
-    description:"Rustige duurtraining voor je aerobe basis.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Duurblok",30,65],
-      ["Cooling-down",5,45]
-    ]
-  },
-  {
-    id:"base",
-    name:"Endurance Base",
-    category:"Duur",
-    difficulty:2,
-    description:"Een langere duurtraining met gelijkmatige belasting.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Duurblok 1",25,65],
-      ["Duurblok 2",25,70],
-      ["Uitfietsen",15,50]
-    ]
-  },
-  {
-    id:"long",
-    name:"Long Endurance",
-    category:"Duur",
-    difficulty:2,
-    description:"Negentig minuten rustige basisconditie.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Rustige duur",30,65],
-      ["Stevige duur",30,72],
-      ["Rustige duur",15,60],
-      ["Uitfietsen",5,45]
-    ]
-  },
-  {
-    id:"tempo",
-    name:"Tempo Builder",
-    category:"Tempo",
-    difficulty:3,
-    description:"Bouw je tempo-uithoudingsvermogen op.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Tempo 1",8,80],
-      ["Herstel",4,50],
-      ["Tempo 2",8,80],
-      ["Herstel",4,50],
-      ["Tempo 3",8,80],
-      ["Uitfietsen",8,45]
-    ]
-  },
-  {
-    id:"tempo2",
-    name:"Tempo Progression",
-    category:"Tempo",
-    difficulty:3,
-    description:"Een training waarbij je geleidelijk harder fietst.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Blok 1",10,75],
-      ["Blok 2",10,80],
-      ["Blok 3",10,85],
-      ["Cooling-down",10,45]
-    ]
-  },
-  {
-    id:"sweet",
-    name:"Sweet Spot Builder",
-    category:"Sweet Spot",
-    difficulty:3,
-    description:"Stevige blokken net onder je FTP.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Sweet Spot 1",10,90],
-      ["Herstel",5,50],
-      ["Sweet Spot 2",10,90],
-      ["Herstel",5,50],
-      ["Sweet Spot 3",10,90],
-      ["Cooling-down",10,45]
-    ]
-  },
-  {
-    id:"sweet2",
-    name:"Sweet Spot Extended",
-    category:"Sweet Spot",
-    difficulty:4,
-    description:"Langere Sweet Spot-blokken voor gevorderde fietsers.",
-    segments:[
-      ["Warming-up",10,55],
-      ["Sweet Spot 1",15,90],
-      ["Herstel",5,50],
-      ["Sweet Spot 2",15,92],
-      ["Cooling-down",10,45]
-    ]
-  },
-  {
-    id:"threshold",
-    name:"FTP Threshold",
-    category:"FTP",
-    difficulty:4,
-    description:"Twee intensieve blokken rond je FTP.",
-    segments:[
-      ["Warming-up",12,55],
-      ["FTP-blok 1",10,100],
-      ["Herstel",6,50],
-      ["FTP-blok 2",10,100],
-      ["Uitfietsen",12,45]
-    ]
-  },
-  {
-    id:"overunder",
-    name:"Over Under",
-    category:"FTP",
-    difficulty:5,
-    description:"Wissel af tussen net onder en boven je FTP.",
-    segments:[
-      ["Warming-up",12,50],
-      ["Under 1",4,90],
-      ["Over 1",2,105],
-      ["Under 2",4,90],
-      ["Over 2",2,105],
-      ["Herstel",6,50],
-      ["Under 3",4,90],
-      ["Over 3",2,105],
-      ["Uitfietsen",9,45]
-    ]
-  },
-  {
-    id:"vo2",
-    name:"VO2 Max Blast",
-    category:"VO2max",
-    difficulty:5,
-    description:"Korte zware intervallen met herstel ertussen.",
-    segments:[
-      ["Warming-up",10,55],
-      ["Interval 1",3,115],
-      ["Herstel",3,50],
-      ["Interval 2",3,115],
-      ["Herstel",3,50],
-      ["Interval 3",3,115],
-      ["Herstel",3,50],
-      ["Interval 4",3,115],
-      ["Herstel",3,50],
-      ["Interval 5",3,115],
-      ["Cooling-down",8,45]
-    ]
-  },
-  {
-    id:"micro",
-    name:"Micro Intervals",
-    category:"VO2max",
-    difficulty:5,
-    description:"Korte afwisselende intensieve inspanningen.",
-    segments:[
-      ["Warming-up",10,50],
-      ["Hard 1",1,120],
-      ["Herstel",1,50],
-      ["Hard 2",1,120],
-      ["Herstel",1,50],
-      ["Hard 3",1,120],
-      ["Herstel",1,50],
-      ["Hard 4",1,120],
-      ["Herstel",1,50],
-      ["Hard 5",1,120],
-      ["Herstel",1,50],
-      ["Hard 6",1,120],
-      ["Herstel",1,50],
-      ["Hard 7",1,120],
-      ["Herstel",1,50],
-      ["Hard 8",1,120],
-      ["Uitfietsen",10,45]
-    ]
-  }
+// ZWIFT WORKOUTS
+// Elk blok heeft: [naam, minuten, percentage FTP].
+// Er zijn zes categorieën met elk tien workouts.
+
+const categories=[
+ {id:"endurance",name:"Endurance",icon:"💚",
+  desc:"Rustige en lange duurtrainingen om je basisconditie op te bouwen."},
+ {id:"sweet",name:"Sweet Spot",icon:"💜",
+  desc:"Stevige duurblokken rond 88–94% van je FTP."},
+ {id:"threshold",name:"Threshold",icon:"🔥",
+  desc:"Intensieve blokken rond je functionele drempelvermogen."},
+ {id:"vo2",name:"VO2 Max",icon:"❤️",
+  desc:"Korte zware intervallen om je maximale aerobe vermogen te trainen."},
+ {id:"sprint",name:"Sprinting",icon:"⚡",
+  desc:"Korte explosieve inspanningen en volledige herstelpauzes."},
+ {id:"climb",name:"Climbing",icon:"⛰️",
+  desc:"Stevige, langere blokken om klimmen te simuleren."}
 ];
 
-let selectedWorkout=null;
-let activeFilter="Alles";
+const workouts=[];
+function addWorkout(category,name,difficulty,blocks,description){
+ workouts.push({
+  id:category+"-"+(workouts.length+1),
+  category,name,difficulty,blocks,description
+ });
+}
+function B(name,minutes,pct){return [name,minutes,pct]}
+function warm(){return B("Warming-up",10,50)}
+function cool(){return B("Cooling-down",8,45)}
+function repeat(count,workMin,workPct,restMin,restPct,name){
+ const a=[];
+ for(let i=1;i<=count;i++){
+  a.push(B(name+" "+i,workMin,workPct));
+  if(i<count)a.push(B("Herstel",restMin,restPct));
+ }
+ return a;
+}
+function build(blocks){return [warm(),...blocks,cool()]}
+function duration(w){return w.blocks.reduce((s,b)=>s+b[1],0)}
+function watts(p){return Math.round(ftp*p/100)}
 
-function workoutDuration(w){
-  return w.segments.reduce((sum,s)=>sum+s[1],0);
+// ENDURANCE - 10 trainingen
+const enduranceConfigs=[
+ ["Recovery Cruise",1,20,50],
+ ["Foundation 40",1,22,60],
+ ["Base Builder",1,35,65],
+ ["Aerobic 50",2,32,70],
+ ["Endurance 60",2,42,65],
+ ["Endurance 75",2,57,68],
+ ["Steady State",2,50,72],
+ ["Long Aerobic 90",2,72,65],
+ ["Progressive Endurance",3,65,73],
+ ["Century Base Builder",3,102,68]
+];
+enduranceConfigs.forEach(([name,d,min,pct])=>{
+ addWorkout("endurance",name,d,build([
+  B("Doorlopende duurinspanning",min,pct)
+ ]),"Een gelijkmatige duurtraining op "+pct+"% FTP.");
+});
+
+// SWEET SPOT - 10 trainingen
+const sweetConfigs=[
+ ["Sweet Spot Intro",2,2,6,88,4],
+ ["Sweet Spot 3 × 8",3,3,8,88,4],
+ ["Sweet Spot 2 × 12",3,2,12,90,5],
+ ["Sweet Spot 3 × 10",3,3,10,90,5],
+ ["Sweet Spot 2 × 15",3,2,15,90,6],
+ ["Sweet Spot 3 × 12",4,3,12,92,5],
+ ["Sweet Spot 2 × 20",4,2,20,90,8],
+ ["Sweet Spot 4 × 10",4,4,10,92,5],
+ ["Sweet Spot 3 × 15",4,3,15,93,6],
+ ["Sweet Spot Challenge",5,3,20,94,7]
+];
+sweetConfigs.forEach(([name,d,count,min,pct,rest])=>{
+ addWorkout("sweet",name,d,build(
+  repeat(count,min,pct,rest,50,"Sweet Spot")
+ ),"Train je duurvermogen met stevige blokken net onder je FTP.");
+});
+
+// THRESHOLD - 10 trainingen
+const thresholdConfigs=[
+ ["Threshold Introduction",3,3,5,95,4],
+ ["FTP 3 × 6",3,3,6,98,4],
+ ["Threshold 2 × 8",3,2,8,100,5],
+ ["FTP 3 × 8",4,3,8,100,5],
+ ["Threshold 2 × 10",4,2,10,100,6],
+ ["Threshold 3 × 10",4,3,10,98,5],
+ ["FTP 2 × 12",4,2,12,100,6],
+ ["Threshold 3 × 12",5,3,12,100,6],
+ ["FTP 2 × 15",5,2,15,100,8],
+ ["Threshold Challenge",5,2,20,98,10]
+];
+thresholdConfigs.forEach(([name,d,count,min,pct,rest])=>{
+ addWorkout("threshold",name,d,build(
+  repeat(count,min,pct,rest,50,"Threshold")
+ ),"Blokken rond je FTP om langer een hoog vermogen vol te houden.");
+});
+
+// VO2 MAX - 10 trainingen
+const vo2Configs=[
+ ["VO2 Starter",3,3,2,110,3],
+ ["VO2 4 × 2",3,4,2,112,3],
+ ["VO2 5 × 2",4,5,2,115,3],
+ ["VO2 4 × 3",4,4,3,110,3],
+ ["VO2 5 × 3",4,5,3,115,3],
+ ["VO2 6 × 3",5,6,3,112,3],
+ ["VO2 4 × 4",5,4,4,110,4],
+ ["VO2 5 × 4",5,5,4,110,4],
+ ["VO2 6 × 2",5,6,2,120,3],
+ ["VO2 Max Challenge",5,5,5,108,5]
+];
+vo2Configs.forEach(([name,d,count,min,pct,rest])=>{
+ addWorkout("vo2",name,d,build(
+  repeat(count,min,pct,rest,45,"VO2-interval")
+ ),"Een intensieve intervaltraining met ruime herstelpauzes.");
+});
+
+// SPRINTING - 10 trainingen
+// De sprintblokken zijn tijdgebaseerde voorbeelden.
+// Percentage FTP is bij echte maximale sprints beperkt bruikbaar.
+const sprintConfigs=[
+ ["Sprint Starter",2,4,0.17,130,3],
+ ["Sprint Power",3,6,0.17,150,3],
+ ["Explosive 10s",3,8,0.17,160,3],
+ ["Neuromuscular Power",3,6,0.25,150,4],
+ ["Acceleration",3,8,0.25,140,3],
+ ["Sprint Repeat",4,10,0.17,160,3],
+ ["Power Burst",4,8,0.33,150,4],
+ ["Sprint Pyramid",4,10,0.25,150,3],
+ ["Race Sprint Prep",5,12,0.17,170,4],
+ ["Sprint Challenge",5,12,0.25,160,4]
+];
+sprintConfigs.forEach(([name,d,count,min,pct,rest])=>{
+ addWorkout("sprint",name,d,[
+  B("Warming-up",15,50),
+  ...repeat(count,min,pct,rest,45,"Sprint"),
+  B("Cooling-down",10,45)
+ ],"Korte sprints met rustige herstelmomenten. De vermogenspercentages zijn indicatief; voer maximale sprints uit op gevoel en met voldoende herstel.");
+});
+
+// CLIMBING - 10 trainingen
+const climbConfigs=[
+ ["Hill Starter",2,3,5,80,4],
+ ["Rolling Hills",2,4,5,85,3],
+ ["Climbing Strength",3,3,8,85,4],
+ ["Hill Tempo",3,3,10,88,5],
+ ["Long Hill Repeats",3,3,12,90,6],
+ ["Climbing Threshold",4,4,8,95,5],
+ ["Mountain Builder",4,3,15,88,6],
+ ["Alpine Strength",4,2,20,90,8],
+ ["Summit Challenge",5,3,15,95,7],
+ ["Mountain Monster",5,3,20,92,8]
+];
+climbConfigs.forEach(([name,d,count,min,pct,rest])=>{
+ addWorkout("climb",name,d,build(
+  repeat(count,min,pct,rest,50,"Klimblok")
+ ),"Simuleer een klim met langere blokken op stevig vermogen.");
+});
+
+// WORKOUT-BIBLIOTHEEK
+let activeCategory=null;
+let selectedWorkout=null;
+
+function colorFor(p){
+ if(p<60)return "#73a9ff";
+ if(p<75)return "#31d69b";
+ if(p<90)return "#e9bb48";
+ if(p<=105)return "#bf78ff";
+ return "#ff7091";
 }
-function watt(pct){
-  return Math.round(ftp*pct/100);
+function chart(w){
+ const total=duration(w);
+ return w.blocks.map(b=>{
+  const width=b[1]/total*100;
+  const height=Math.min(100,b[2]/180*100);
+  return `<div title="${esc(b[0])} - ${b[1].toFixed(2)} min - ${b[2]}% FTP"
+  style="flex:0 0 calc(${width}% - 2px);
+  height:${height}%;background:${colorFor(b[2])}"></div>`;
+ }).join("");
 }
-function intensityColor(pct){
-  if(pct<60)return "#73a9ff";
-  if(pct<75)return "#31d69b";
-  if(pct<90)return "#e9bb48";
-  if(pct<=105)return "#bf78ff";
-  return "#ff7091";
+function displayMinutes(n){
+ const sec=Math.round(n*60);
+ if(sec%60===0)return sec/60+" min";
+ return Math.floor(sec/60)+" min "+sec%60+" sec";
 }
 function saveFTP(){
-  const n=Number($("ftpInput").value);
-  if(!Number.isFinite(n)||n<50||n>600){
-    alert("Voer een FTP tussen 50 en 600 watt in.");
-    return;
-  }
-  ftp=n;
-  try{
-    localStorage.setItem(FTP_KEY,String(ftp));
-    renderZwift();
-    if(selectedWorkout)openWorkout(selectedWorkout.id);
-    alert("FTP opgeslagen!");
-  }catch(e){
-    alert("Je FTP kon niet worden opgeslagen.");
-  }
+ const n=Number($("ftpInput").value);
+ if(!Number.isFinite(n)||n<50||n>600){
+  alert("Vul een FTP tussen 50 en 600 watt in.");return;
+ }
+ ftp=n;
+ try{
+  localStorage.setItem(FTP_KEY,String(ftp));
+  if(selectedWorkout)openWorkout(selectedWorkout.id);
+  alert("FTP opgeslagen!");
+ }catch(e){alert("Je FTP kon niet worden opgeslagen.")}
 }
-function chartHtml(w,height=65){
-  return w.segments.map(s=>{
-    const width=s[1]/workoutDuration(w)*100;
-    const h=Math.min(100,s[2]/125*100);
-    return `<div title="${escapeHtml(s[0])}: ${s[1]} min, ${s[2]}% FTP"
-      style="
-        flex:0 0 calc(${width}% - 3px);
-        height:${h}%;
-        background:${intensityColor(s[2])};
-      "></div>`;
-  }).join("");
+function renderCategories(){
+ $("ftpInput").value=ftp;
+ $("categoryGrid").innerHTML=categories.map(c=>{
+  const count=workouts.filter(w=>w.category===c.id).length;
+  return `<button class="card category-card" data-category="${c.id}"
+   style="text-align:left;color:var(--text);background:var(--panel)">
+   <div class="category-icon">${c.icon}</div>
+   <h3>${esc(c.name)}</h3>
+   <p class="small">${esc(c.desc)}</p>
+   <div class="category-count">${count} workouts →</div>
+  </button>`;
+ }).join("");
 }
-function renderFilters(){
-  const names=[
-    "Alles","Herstel","Duur","Tempo",
-    "Sweet Spot","FTP","VO2max"
-  ];
-  $("workoutFilters").innerHTML=names.map(n=>`
-    <button class="${activeFilter===n?"selected":""}"
-      data-filter="${escapeHtml(n)}">
-      ${escapeHtml(n)}
-    </button>`).join("");
+$("categoryGrid").onclick=e=>{
+ const b=e.target.closest("[data-category]");
+ if(b)openCategory(b.dataset.category);
+};
+function openCategory(id){
+ activeCategory=categories.find(c=>c.id===id);
+ if(!activeCategory)return;
+ selectedWorkout=null;
+ $("categoryView").classList.add("hidden");
+ $("workoutDetailView").classList.add("hidden");
+ $("libraryView").classList.remove("hidden");
+ $("libraryTitle").textContent=activeCategory.icon+" "+activeCategory.name;
+ $("libraryDescription").textContent=activeCategory.desc;
+ $("workoutSearch").value="";
+ $("durationFilter").value="all";
+ $("difficultyFilter").value="all";
+ renderLibrary();
+ window.scrollTo(0,0);
 }
-$("workoutFilters").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-filter]");
-  if(!b)return;
-  activeFilter=b.dataset.filter;
-  renderZwift();
-});
-
-$("workoutSearch").addEventListener("input",renderZwift);
-
-function renderZwift(){
-  $("ftpInput").value=ftp;
-  renderFilters();
-  const search=$("workoutSearch").value.toLowerCase();
-
-  const results=workouts.filter(w=>{
-    const matchCategory=
-      activeFilter==="Alles"||w.category===activeFilter;
-    const matchSearch=
-      (w.name+" "+w.category+" "+w.description)
-      .toLowerCase().includes(search);
-    return matchCategory&&matchSearch;
-  });
-
-  $("workoutCount").textContent=
-    results.length+" trainingen gevonden";
-
-  $("zwiftWorkouts").innerHTML=results.map(w=>`
-    <div class="card workout-card">
-      <span class="tag">⚡ ${escapeHtml(w.category)}</span>
-      <h3>${escapeHtml(w.name)}</h3>
-      <p class="small">
-        ⏱ ${workoutDuration(w)} min •
-        ${"★".repeat(w.difficulty)}${"☆".repeat(5-w.difficulty)}
-      </p>
-      <div class="bar-preview">${chartHtml(w)}</div>
-      <p>${escapeHtml(w.description)}</p>
-      <button data-workout="${w.id}">
-        Bekijk training →
-      </button>
-    </div>`).join("");
-
-  if(!results.length){
-    $("zwiftWorkouts").innerHTML=
-      '<p class="small">Geen trainingen gevonden.</p>';
-  }
+function backToCategories(){
+ activeCategory=null;
+ selectedWorkout=null;
+ $("categoryView").classList.remove("hidden");
+ $("libraryView").classList.add("hidden");
+ $("workoutDetailView").classList.add("hidden");
+ window.scrollTo(0,0);
 }
-$("zwiftWorkouts").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-workout]");
-  if(b)openWorkout(b.dataset.workout);
-});
-
+function renderLibrary(){
+ if(!activeCategory)return;
+ const search=$("workoutSearch").value.toLowerCase();
+ const df=$("durationFilter").value;
+ const difficulty=$("difficultyFilter").value;
+ const results=workouts.filter(w=>{
+  if(w.category!==activeCategory.id)return false;
+  if(!w.name.toLowerCase().includes(search))return false;
+  const min=duration(w);
+  if(df==="short"&&min>45)return false;
+  if(df==="medium"&&(min<=45||min>75))return false;
+  if(df==="long"&&min<=75)return false;
+  if(difficulty!=="all"&&w.difficulty!==Number(difficulty))return false;
+  return true;
+ });
+ $("workoutCount").textContent=results.length+" workouts gevonden";
+ $("workoutGrid").innerHTML=results.length?results.map(w=>`
+  <div class="card workout-card">
+   <span class="tag">${esc(activeCategory.name)}</span>
+   <h3>${esc(w.name)}</h3>
+   <p class="small">⏱ ${Math.round(duration(w))} min •
+    ${"★".repeat(w.difficulty)}${"☆".repeat(5-w.difficulty)}</p>
+   <div class="workout-chart">${chart(w)}</div>
+   <p class="small">${esc(w.description)}</p>
+   <button data-workout="${w.id}">Bekijk workout →</button>
+  </div>`).join("")
+ :'<div class="card"><p>Geen workouts gevonden. Pas je filters aan.</p></div>';
+}
+$("workoutSearch").oninput=renderLibrary;
+$("durationFilter").onchange=renderLibrary;
+$("difficultyFilter").onchange=renderLibrary;
+$("workoutGrid").onclick=e=>{
+ const b=e.target.closest("[data-workout]");
+ if(b)openWorkout(b.dataset.workout);
+};
 function openWorkout(id){
-  const w=workouts.find(w=>w.id===id);
-  if(!w)return;
-  selectedWorkout=w;
-
-  $("detailName").textContent="⚡ "+w.name;
-  $("detailMeta").textContent=
-    w.category+" • "+workoutDuration(w)+" minuten • "+
-    "Moeilijkheid "+w.difficulty+"/5";
-  $("detailDescription").textContent=w.description;
-  $("detailChart").innerHTML=chartHtml(w);
-
-  $("detailSegments").innerHTML=w.segments.map(s=>`
-    <div class="segment">
-      <div class="segment-details">
-        <strong>${escapeHtml(s[0])}</strong>
-        <div class="small">${s[1]} minuten</div>
-      </div>
-      <div style="text-align:right">
-        <strong style="color:${intensityColor(s[2])}">
-          ${watt(s[2])} W
-        </strong>
-        <div class="small">${s[2]}% FTP</div>
-      </div>
-    </div>`).join("");
-
-  $("workoutDate").value=localDate();
-  $("workoutDetails").classList.remove("hidden");
-  $("workoutDetails").scrollIntoView({
-    behavior:"smooth",block:"start"
-  });
+ const w=workouts.find(w=>w.id===id);
+ if(!w)return;
+ selectedWorkout=w;
+ const c=categories.find(c=>c.id===w.category);
+ $("libraryView").classList.add("hidden");
+ $("workoutDetailView").classList.remove("hidden");
+ $("detailCategory").textContent=c.name;
+ $("detailName").textContent=w.name;
+ $("detailMeta").textContent=
+  Math.round(duration(w))+" min • Niveau "+w.difficulty+"/5";
+ $("detailDescription").textContent=w.description;
+ $("detailChart").innerHTML=chart(w);
+ $("detailSegments").innerHTML=w.blocks.map(b=>`
+ <div class="interval">
+  <div><strong>${esc(b[0])}</strong>
+  <span class="small">${displayMinutes(b[1])}</span></div>
+  <div style="text-align:right">
+   <strong style="color:${colorFor(b[2])}">${watts(b[2])} W</strong>
+   <span class="small">${b[2]}% FTP</span>
+  </div>
+ </div>`).join("");
+ $("workoutDate").value=localDate();
+ $("workoutDistance").value=0;
+ window.scrollTo(0,0);
 }
-function closeWorkout(){
-  $("workoutDetails").classList.add("hidden");
-  selectedWorkout=null;
+function backToLibrary(){
+ selectedWorkout=null;
+ $("workoutDetailView").classList.add("hidden");
+ $("libraryView").classList.remove("hidden");
+ window.scrollTo(0,0);
 }
-function planSelectedWorkout(){
-  if(!selectedWorkout)return;
-  const date=$("workoutDate").value;
-  const distance=Number($("workoutDistance").value);
-
-  if(!date||!Number.isFinite(distance)||
-     distance<0||distance>1000){
-    alert("Vul een geldige datum en afstand in.");
-    return;
-  }
-
-  const t={
-    id:crypto.randomUUID(),
-    name:"Zwift: "+selectedWorkout.name,
-    type:"Zwift",
-    date,
-    km:distance,
-    minutes:workoutDuration(selectedWorkout),
-    done:false,
-    workoutId:selectedWorkout.id
-  };
-  data.trainings.push(t);
-  if(!save()){
-    data.trainings.pop();
-    return;
-  }
-  closeWorkout();
-  showPage("planning");
-  alert("Je Zwift-training staat in je planning! ⚡");
+function planWorkout(){
+ if(!selectedWorkout)return;
+ const date=$("workoutDate").value;
+ const km=Number($("workoutDistance").value);
+ if(!date||!Number.isFinite(km)||km<0||km>1000){
+  alert("Controleer de datum en afstand.");return;
+ }
+ const t={
+  id:crypto.randomUUID(),
+  name:"Zwift: "+selectedWorkout.name,
+  date,type:"Zwift",
+  km,minutes:Math.round(duration(selectedWorkout)),
+  done:false,
+  workoutId:selectedWorkout.id
+ };
+ data.trainings.push(t);
+ if(!save()){data.trainings.pop();return}
+ showPage("planning");
+ alert("Workout toegevoegd aan je planning! ⚡");
 }
 
-// -----------------------------------------
 // CYCLING COACH
-// -----------------------------------------
 function addMessage(sender,message){
-  const el=document.createElement("div");
-  el.className="message "+(sender==="Jij"?"me":"bot");
-  el.textContent=(sender==="Jij"?"Jij: ":"Coach: ")+message;
-  $("chat").appendChild(el);
-  $("chat").scrollTop=$("chat").scrollHeight;
+ const el=document.createElement("div");
+ el.className="message "+(sender==="Jij"?"me":"bot");
+ el.textContent=sender+": "+message;
+ $("chat").appendChild(el);
+ $("chat").scrollTop=$("chat").scrollHeight;
 }
-
-function coachAnswer(question){
-  const q=question.toLowerCase();
-  const done=weekly().filter(t=>t.done).length;
-
-  if(q.includes("zwift")||q.includes("workout")){
-    if(q.includes("herstel")||q.includes("rust")){
-      return "Ik raad Recovery Spin aan.\n\n"+
-        "30 minuten rustig fietsen.\n"+
-        "Werk rond 40–50% van je FTP.\n\n"+
-        "Open Zwift en filter op Herstel.";
-    }
-    if(q.includes("interval")||q.includes("vo2")){
-      return "Bekijk VO2 Max Blast.\n\n"+
-        "Deze workout bevat vijf intervallen "+
-        "van 3 minuten op 115% FTP.\n\n"+
-        "Het is een zware training. "+
-        "Doe hem alleen als je goed hersteld bent.";
-    }
-    return "Mijn Zwift-advies:\n\n"+
-      "Herstel nodig? Recovery Spin.\n"+
-      "Conditie opbouwen? Endurance Base.\n"+
-      "Steviger trainen? Sweet Spot Builder.\n"+
-      "Intensiteit verhogen? VO2 Max Blast.\n\n"+
-      "In het Zwift-tabblad zie je de volledige "+
-      "opbouw en bijbehorende wattages.";
-  }
-
-  if(q.includes("schema")||q.includes("week")){
-    return "Voorbeeld van een trainingsweek:\n\n"+
-      "Maandag: rust\n"+
-      "Dinsdag: Tempo Builder (50 min)\n"+
-      "Woensdag: rust\n"+
-      "Donderdag: Easy Endurance (45 min)\n"+
-      "Vrijdag: rust\n"+
-      "Zaterdag: Long Endurance (90 min)\n"+
-      "Zondag: Recovery Spin (30 min) of rust\n\n"+
-      "Dit is een algemeen voorbeeld, geen "+
-      "persoonlijk berekend schema. Pas het aan "+
-      "je conditie en herstel aan.";
-  }
-
-  if(q.includes("interval")||q.includes("snelheid")){
-    return "Wil je aan je intensiteit werken?\n\n"+
-      "Probeer Tempo Builder voor een wat "+
-      "gemakkelijkere prikkel, of VO2 Max Blast "+
-      "voor een zware intervaltraining.\n\n"+
-      "Begin met een goede warming-up.";
-  }
-
-  if(q.includes("herstel")||q.includes("moe")||
-     q.includes("rust")){
-    return "Herstel is net zo belangrijk als trainen.\n\n"+
-      "Plan een rustdag of kies Recovery Spin.\n"+
-      "Bij pijn of aanhoudende vermoeidheid "+
-      "is minder trainen verstandig.";
-  }
-
-  if(q.includes("ftp")||q.includes("watt")){
-    return "Je ingestelde FTP is "+ftp+" watt.\n\n"+
-      "Sweet Spot op 90%: "+watt(90)+" W\n"+
-      "Threshold op 100%: "+watt(100)+" W\n"+
-      "VO2max op 115%: "+watt(115)+" W\n\n"+
-      "Je kunt je FTP aanpassen in het Zwift-tabblad.";
-  }
-
-  if(q.includes("doel")||q.includes("voortgang")||
-     q.includes("kilometer")){
-    return "Je hebt deze week "+
-      completedKm().toFixed(1)+" van "+data.goal+
-      " km afgerond ("+percent()+"%).\n"+
-      "Afgeronde trainingen: "+done+".\n\n"+
-      (percent()>=100
-        ?"Je hebt je doel bereikt. Denk ook aan herstel!"
-        :"Plan je overige trainingen rustig en haalbaar.");
-  }
-
-  return "Ik help je graag met wielrennen! 💜\n\n"+
-    "Probeer bijvoorbeeld:\n"+
-    "• Maak een weekschema\n"+
-    "• Welke Zwift-training past bij mij?\n"+
-    "• Hoe verbeter ik mijn FTP?\n"+
-    "• Hoe gaat mijn voortgang?\n"+
-    "• Welke intervaltraining raad je aan?\n\n"+
-    "Ik gebruik vaste regels en ben geen "+
-    "echte AI-chatbot.";
+function coachAnswer(q){
+ q=q.toLowerCase();
+ if(q.includes("schema")||q.includes("week")){
+  return "Voorbeeld van een trainingsweek:\n\n"+
+   "Maandag: rust\n"+
+   "Dinsdag: Sweet Spot Intro\n"+
+   "Woensdag: rust\n"+
+   "Donderdag: Foundation 40\n"+
+   "Vrijdag: rust\n"+
+   "Zaterdag: Endurance 75\n"+
+   "Zondag: Recovery Cruise of rust\n\n"+
+   "Je vindt deze trainingen in de Zwift-bibliotheek. "+
+   "Pas ze aan je niveau en herstel aan.";
+ }
+ if(q.includes("zwift")||q.includes("workout")||q.includes("training")){
+  return "In de nieuwe Zwift-bibliotheek staan "+
+   workouts.length+" trainingen!\n\n"+
+   "Endurance: rustig je basis verbeteren.\n"+
+   "Sweet Spot: stevige duurblokken.\n"+
+   "Threshold: werken rond je FTP.\n"+
+   "VO2 Max: zware aerobe intervallen.\n"+
+   "Sprinting: explosieve inspanningen.\n"+
+   "Climbing: lange klimblokken.\n\n"+
+   "Kies de categorie die past bij je doel.";
+ }
+ if(q.includes("ftp")||q.includes("watt")){
+  return "Je ingestelde FTP is "+ftp+" watt.\n\n"+
+   "65% FTP: "+watts(65)+" W\n"+
+   "90% FTP: "+watts(90)+" W\n"+
+   "100% FTP: "+watts(100)+" W\n"+
+   "115% FTP: "+watts(115)+" W.";
+ }
+ if(q.includes("doel")||q.includes("voortgang")||q.includes("kilometer")){
+  return "Je hebt deze week "+completedKm().toFixed(1)+
+   " van "+data.goal+" km afgerond ("+percent()+"%).\n"+
+   "Afgeronde ritten: "+weekly().filter(t=>t.done).length+".";
+ }
+ if(q.includes("herstel")||q.includes("moe")||q.includes("rust")){
+  return "Herstel is belangrijk! Neem een rustdag "+
+   "of kies een korte Recovery Cruise. Bij pijn of "+
+   "aanhoudende klachten kun je beter de belasting verminderen.";
+ }
+ return "Ik kan helpen met weekschema's, FTP, "+
+  "trainingscategorieën, herstel en je voortgang.\n\n"+
+  "Ik ben een gratis regelgebaseerde coach, geen echte AI-chatbot.";
 }
-
-function askCoach(question){
-  addMessage("Jij",question);
-  addMessage("Coach",coachAnswer(question));
+function askCoach(q){
+ addMessage("Jij",q);
+ addMessage("Coach",coachAnswer(q));
 }
+$("chatForm").onsubmit=e=>{
+ e.preventDefault();
+ const q=$("chatInput").value.trim();
+ if(!q)return;
+ askCoach(q);
+ $("chatInput").value="";
+};
+addMessage("Coach","Hoi! 👋 Je Zwift-bibliotheek heeft nu 60 workouts, verdeeld over zes categorieën. Waar wil je vandaag aan werken?");
 
-$("chatForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const q=$("chatInput").value.trim();
-  if(!q)return;
-  askCoach(q);
-  $("chatInput").value="";
-});
-
-addMessage("Coach",
-  "Hoi! 👋 Ik ben je Cycling Coach.\n\n"+
-  "Nieuw: we hebben nu twaalf Zwift-workouts "+
-  "met FTP-wattages!\n\n"+
-  "Vraag gerust welke training bij je doel past."
-);
-
-// -----------------------------------------
 // APP STARTEN
-// -----------------------------------------
 function render(){
-  renderDashboard();
-  renderTrainings();
-  renderGoals();
-  renderCalendar();
-  renderZwift();
+ renderDashboard();
+ renderTrainings();
+ renderGoals();
+ renderCalendar();
+ renderCategories();
 }
 render();
 </script>
